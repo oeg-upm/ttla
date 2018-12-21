@@ -5,6 +5,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
+    raise Exception("test fail")
     return render_template('home.html')
 
 
