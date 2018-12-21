@@ -12,4 +12,5 @@ import unittest
 
 tests_cases = unittest.TestLoader().loadTestsFromTestCase(SampleTest)
 suite = unittest.TestSuite([tests_cases,])
-unittest.TextTestRunner().run(suite)
+result = unittest.TextTestRunner().run(suite)
+sys.exit(not result.wasSuccessful())

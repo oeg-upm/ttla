@@ -17,11 +17,11 @@
 
 
 # Tests
-## *nix: 
 ```
-sh run_tests.sh
+python tests/test.py
 ```
-## other: 
+# Coverage: 
 ```
 coverage run --source=. --omit=.venv/*  tests/test.py
-coverage report```
+coverage report
+```
