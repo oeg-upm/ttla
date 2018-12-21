@@ -1,6 +1,6 @@
 # bob
 [![Build Status](https://semaphoreci.com/api/v1/ahmad88me/bob/branches/master/badge.svg)](https://semaphoreci.com/ahmad88me/bob)
-
+[![codecov](https://codecov.io/gh/oeg-upm/bob/branch/master/graph/badge.svg)](https://codecov.io/gh/oeg-upm/bob)
 
 # Prerequisits (one time)
 1. [pip](https://pip.pypa.io/en/stable/installing/) 
