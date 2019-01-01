@@ -8,7 +8,7 @@
 2. [virtualenv](https://virtualenv.pypa.io/en/latest/)
 3. create virtualenv: `virtualenv -p /usr/bin/python2.7 .venv`
 4. access the virtualenv: `source .venv/bin/activate`
-5. install dependancies: `pip install -r requirements.txt`
+5. install dependencies: `pip install -r requirements.txt`
 
 
 # Run
@@ -26,3 +26,11 @@ python tests/test.py
 coverage run --source=. --omit=.venv/*  tests/test.py
 coverage report
 ```
+
+# Contribution 
+To contribute, please read the below to follow the same convention
+
+## Code structure
+* The source code related to detection of data types (e.g. categorical, continuous, ...) is located under `detect`.
+* while the files related to the annotation of the semantic types (e.g. height of a person) are located under `label`.
+
