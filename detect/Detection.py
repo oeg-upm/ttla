@@ -10,8 +10,8 @@ import math
 #2. Ordinal
 #3. Ratio and Interval
 
-do we assume the list is always ordered/sorted?
-[sequential]
+# do we assume the list is always ordered/sorted?
+# [sequential]
 
 
 class Detection(object):
