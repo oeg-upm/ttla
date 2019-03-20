@@ -3,6 +3,12 @@
 [![codecov](https://codecov.io/gh/oeg-upm/bob/branch/master/graph/badge.svg)](https://codecov.io/gh/oeg-upm/bob)
 [![status](https://img.shields.io/badge/status-under%20development-ff69b4.svg)](https://github.com/oeg-upm/bob)
 
+This application is meant to be an automated experiment and not
+an application by it self to annotated numeric columns. Nonetheless, 
+we are planning to create an application based on this approach
+details will be mentioned here once we start.
+
+
 # Prerequisits (one time)
 1. [pip](https://pip.pypa.io/en/stable/installing/) 
 2. [virtualenv](https://virtualenv.pypa.io/en/latest/)
