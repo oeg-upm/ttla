@@ -1,5 +1,12 @@
+
+data/*
+
 # pycharm
 .idea/
+
+#Mac
+.DS_Store
+
 
 
 # Byte-compiled / optimized / DLL files

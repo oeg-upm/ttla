@@ -1,5 +1,5 @@
-
 import sys
+from __init__ import commons
 
 
 def print_help():
@@ -20,6 +20,7 @@ if __name__ == '__main__':
         test_name = "few args"
 
     if test_name == 't2dv2':
+        commons.t2dv2_columns_of_kind("nominal")
         print("T2Dv2 test is still under construction")
     elif test_name == 'olympic':
         print("Olympic Games test is under construction")

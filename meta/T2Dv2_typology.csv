@@ -12,7 +12,7 @@
 11688006_0_8123036130090004213.tar.gz,Country,0,population density sq. km,,,ratio-interval,other
 11688006_0_8123036130090004213.tar.gz,Country,1,area sq. mi,http://dbpedia.org/property/statArea,5,ratio-interval,count
 11688006_0_8123036130090004213.tar.gz,Country,0,population density sq. mi,,,ratio-interval,other
-11833461_1_3811022039809817402.tar.gz,VideoGame,0,Pan European Game Information,,,nominal,
+11833461_1_3811022039809817402.tar.gz,VideoGame,0,Pan European Game Information,,,nominal,categorical
 12746760_0_6703465836620308483.tar.gz,PoliticalParty,0,funding,,,ratio-interval,other
 12746760_0_6703465836620308483.tar.gz,PoliticalParty,0,funding,,,ratio-interval,other
 12746760_0_6703465836620308483.tar.gz,PoliticalParty,0,funding,,,ratio-interval,other
@@ -32,7 +32,7 @@
 16767252_0_2409448375013995751.tar.gz,Film,0,fans' rank,,,ordinal,
 16767252_0_2409448375013995751.tar.gz,Film,1,release year,http://dbpedia.org/property/released,2,year,
 16767252_0_2409448375013995751.tar.gz,Film,0,overall rank,,,ordinal,
-16949304_0_2573050770332101882.tar.gz,Hospital,0,hospital id,,,nominal,
+16949304_0_2573050770332101882.tar.gz,Hospital,0,hospital id,,,nominal,random
 19073331_0_2742992342272078110.tar.gz,PoliticalParty,1,"different in prediction and results. Classified as change. Looking at the objects in dbpedia, values look similar",http://dbpedia.org/property/change,3,ratio-interval,other
 20135078_0_7570343137119682530.tar.gz,Film,0,fans' rank,,,ordinal,
 20135078_0_7570343137119682530.tar.gz,Film,1,yes,http://dbpedia.org/ontology/activeYearsStartYear,2,year,
