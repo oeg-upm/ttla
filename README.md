@@ -35,8 +35,8 @@ coverage report
 
 # DATA
 ## T2Dv2
-[typology](https://drive.google.com/file/d/1VND173tUndx0TTaBVrQQbzY58RQsypS6/view?usp=sharing)
-[csv files](https://github.com/ahmad88me/TADA-NumCol/tree/master/web_commons/data)
+* [typology](https://drive.google.com/file/d/1VND173tUndx0TTaBVrQQbzY58RQsypS6/view?usp=sharing)
+* [csv files](https://github.com/ahmad88me/TADA-NumCol/tree/master/web_commons/data)
 
 # Contribution 
 To contribute, please read the below to follow the same convention
