@@ -19,7 +19,6 @@ class Detection(object):
     def __init__(self, values):
         self.values = values
 
-
     def is_sequential(self):
         """
         we can detect it by taking the minimum (700) and compare it with a gener-
