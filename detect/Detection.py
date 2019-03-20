@@ -1,35 +1,78 @@
 from collections import Counter
 import math
 
-
-#1. Here we identify four kinds of nominal numbers:
-#1.1) sequential
-#1.2) hierarchical/compositional?
-#1.3) categorical
-#1.4) random
-#2. Ordinal
-#3. Ratio and Interval
-
-do we assume the list is always ordered/sorted?
-[sequential]
-
-
+"""
+Questions:
+1) where we should add a contidion that numbers cennot be negative or have to be real;
+we dont check that now; not sure for which cases it is necessary now
+2) should this be sequential? [0,2,4,6,9,12,15]
+3) in hierarchical do all values have to be unique or like 80%? same in other cases, where it is
+necessary and what is the treshold for that?
+4) in hierarchical do all numbers have to have the same number of digits or like 80%?
+5) in sequential how many of values have to have the same difference? currently (int(len(diffs)/2))
+6) what should be with [1,1,1,1,1,1] or [2,2,2,2,2,2]
+7) hierarchical now has that 80% of values have to have the same length - could be changed
+8) i dont fully understand when something with positive and real values would not get to ratiointerval case -
+is that okay that in all cases it will fall there? there is a really likaly there will be a lot of random crap there
+9) should this be [1,1,3,3,3,3,3,5] categorical or ratiointerval?
+"""
 class Detection(object):
 
     def __init__(self, values):
         self.values = values
+        self.cleanValues = self.preprocessing()
+        self.type = self.getType()
 
+
+    """ function for cleaning the column """
+    def preprocessing(self):
+        return self.values
+
+    def getType(self):
+
+        if self.is_ordinal():
+            return 'ordinal'
+        elif self.is_categorical():
+            return 'categorical'
+        elif self.is_sequential():
+            return 'sequential'
+        elif self.is_hierarchical():
+            return 'hierarchical'
+        elif self.is_ratiointerval():
+            return 'ratiointerval'
+        else:
+            return 'unknown'
+
+
+    def is_ordinal(self):
+        diffs = [j-i for i, j in zip(self.cleanValues[:-1], self.cleanValues[1:])]
+        if all(x == diffs[0] for x in diffs) and self.cleanValues[0] == 1:
+            return True
+        return False
+
+    def is_categorical(self):
+        """
+        if the given column is categorical or not
+        :param col: pandas series
+        :return: true of false
+        """
+        cc = Counter(self.cleanValues)
+        if len(cc.keys()) <= math.sqrt(len(self.cleanValues)):
+            return True
+        return False
 
     def is_sequential(self):
         """
-        we can detect it by taking the minimum (700) and compare it with a gener-
-        ated sequence starting from that minimum value until the maximum (932). It becomes tricky when we have
-        missing values due to the selected population having something in common (e.g., sequences of solider for a
-        sub-unit). The intuition that we follow is that if more than the square root of the numbers in the generated
-        sequence Y are also in the original collection of numbers, then we consider the collection of numbers as a
-        sequential collection.
+        diffs: difference between every two consecutive numbers
+        mostPopular: the most popular number in diffs
+        true if mostPopular value appears in diffs more or equal times than (int(len(diffs)/2)
+        also mostPopular cannot be equal to zero
         """
-        pass
+        diffs = [j-i for i, j in zip(self.cleanValues[:-1], self.cleanValues[1:])]
+        mostPopular = max(set(diffs), key = diffs.count)
+        if diffs.count(mostPopular) >= (int(len(diffs)/2)) and mostPopular != 0:
+            return True
+        return False
 
     def is_hierarchical(self):
         """
@@ -39,37 +82,28 @@ class Detection(object):
         hierarchical. This is if the values are unique; have duplicate values is
         a stron evdence of a non-hierarchical numbers.
         """
-        pass
-
-    def is_categorical(self):
-        """
-        if the given column is categorical or not
-        :param col: pandas series
-        :return: true of false
-        """
-        cc = Counter(self.values)
-        if len(cc.keys()) <= math.sqrt(len(col)):
-            return True
+        lengths = []
+        for i in self.cleanValues:
+            lengths.append(len(str(i)))
+        mostPopular = max(set(lengths), key = lengths.count)
+        if lengths.count(mostPopular) >= (int(len(lengths)*0.8)):
+            seen = set()
+            if not any(i in seen or seen.add(i) for i in self.cleanValues):
+                return True
         return False
 
-    def is_nominalRandom(self):
-        """
-        if this and not sequential, hierarchical or categorical than it is is_nominalRando
-        """
-        pass
 
-    def is_ordinal(self):
-        """
-        list of a natural numbers starting from 1 until the last element of the list. An in-
-        tuitive way to detect is to see if the set of numbers (what we want to examine) is equal to
-        that list of numbers that we generated from 1 until the size of the list.
-        no negative and no floats
-        """
-        pass
+    #def is_nominalrandom(self):
+    #    """
+    #    if this and not sequential, hierarchical or categorical than it is is_nominalrandom
+    #    """
+    #    pass
 
-    def is_ratioInterval(self):
-        """
-        positive by nature and they do not have factions. Often have the difference between the square root for the
-        maximum number and minimum number in the collection of numbers X is more that 1^10.
-        """
-        pass
+
+    def is_ratiointerval(self):
+        nonnegative = sum(1 for number in self.cleanValues if number >= 0)
+        if len(self.cleanValues) == nonnegative:
+            if all(isinstance(x, int) for x in self.cleanValues):
+                if (math.sqrt(max(self.cleanValues)) - math.sqrt(min(self.cleanValues))) > 1:
+                    return True
+        return False
