@@ -2,13 +2,23 @@ from scipy import stats
 from scipy.spatial import distance
 from collections import Counter
 
+
 class SimilarityMeasures(object):
 
     def __init__(self):
         pass
 
-    # The null-hypothesis for the KT test is that the distributions are the same. Thus, the lower your p value the greater the statistical evidence you have to reject the null hypothesis and conclude the distributions are different. The test only really lets you speak of your confidence that the distributions are different, not the same, since the test is designed to find alpha, the probability of Type I error.
     def KSTest(self, bag1, bag2):
+        """
+        The null-hypothesis for the KT test is that the distributions are the same. Thus, the lower your p value the
+        greater the statistical evidence you have to reject the null hypothesis and conclude the distributions are
+        different. The test only really lets you speak of your confidence that the distributions are different, not
+        the same, since the test is designed to find alpha, the probability of Type I error.
+
+        :param bag1:
+        :param bag2:
+        :return:
+        """
         return stats.ks_2samp(bag1, bag2)
 
     def cosineSimilarity(self, bag1, bag2):
@@ -50,4 +60,4 @@ class SimilarityMeasures(object):
         for c in val:
             if c.isdigit() or c == '.':
                 trimVal = trimVal + c
-return trimVal
+        return trimVal

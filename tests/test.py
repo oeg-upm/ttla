@@ -9,11 +9,13 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from sample_tests import SampleTest
 from detection_tests import DetectionTests
+from labeling_tests import LabelingTests
 import unittest
 
 
 sample_cases = unittest.TestLoader().loadTestsFromTestCase(SampleTest)
 detect_cases = unittest.TestLoader().loadTestsFromTestCase(DetectionTests)
-suite = unittest.TestSuite([sample_cases, detect_cases])
+labeling_cases = unittest.TestLoader().loadTestsFromTestCase(LabelingTests)
+suite = unittest.TestSuite([sample_cases, detect_cases, labeling_cases])
 result = unittest.TextTestRunner().run(suite)
 sys.exit(not result.wasSuccessful())
