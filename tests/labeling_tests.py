@@ -28,5 +28,6 @@ class LabelingTests(unittest.TestCase):
         bag1 = [10,20,30]
         bag2 = [11,21,50]
         sm = SimilarityMeasures.SimilarityMeasures()
-        print sm.KSTest(bag1, bag2)
-
+        stat, pval = sm.KSTest(bag1, bag2)
+        self.assertAlmostEqual(stat, 0.333, places=3)
+        self.assertAlmostEqual(pval, 0.976, places=3)
