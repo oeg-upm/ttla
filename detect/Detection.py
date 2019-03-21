@@ -1,5 +1,6 @@
 from collections import Counter
 import math
+from commons import CATEGORICAL, ORDINAL, SEQUENTIAL, RATIO_INTERVAL, HIERARCHICAL, COUNTS
 
 """
 Questions:
@@ -16,13 +17,13 @@ necessary and what is the treshold for that?
 is that okay that in all cases it will fall there? there is a really likaly there will be a lot of random crap there
 9) should this be [1,1,3,3,3,3,3,5] categorical or ratiointerval?
 """
+
 class Detection(object):
 
     def __init__(self, values):
         self.values = values
         self.cleanValues = self.preprocessing()
         self.type = self.getType()
-
 
     """ function for cleaning the column """
     def preprocessing(self):
@@ -31,18 +32,17 @@ class Detection(object):
     def getType(self):
 
         if self.is_ordinal():
-            return 'ordinal'
+            return ORDINAL
         elif self.is_categorical():
-            return 'categorical'
+            return CATEGORICAL
         elif self.is_sequential():
-            return 'sequential'
+            return SEQUENTIAL
         elif self.is_hierarchical():
-            return 'hierarchical'
+            return HIERARCHICAL
         elif self.is_ratiointerval():
-            return 'ratiointerval'
+            return RATIO_INTERVAL
         else:
             return 'unknown'
-
 
     def is_ordinal(self):
         diffs = [j-i for i, j in zip(self.cleanValues[:-1], self.cleanValues[1:])]
@@ -57,7 +57,8 @@ class Detection(object):
         :return: true of false
         """
         cc = Counter(self.cleanValues)
-        if len(cc.keys()) <= math.sqrt(len(self.cleanValues)):
+        # if len(cc.keys()) <= math.sqrt(len(self.cleanValues)):
+        if len(cc.keys()) <= len(self.cleanValues)**(1/1.5):
             return True
         return False
 
@@ -92,14 +93,6 @@ class Detection(object):
                 return True
         return False
 
-
-    #def is_nominalrandom(self):
-    #    """
-    #    if this and not sequential, hierarchical or categorical than it is is_nominalrandom
-    #    """
-    #    pass
-
-
     def is_ratiointerval(self):
         nonnegative = sum(1 for number in self.cleanValues if number >= 0)
         if len(self.cleanValues) == nonnegative:
@@ -107,3 +100,5 @@ class Detection(object):
                 if (math.sqrt(max(self.cleanValues)) - math.sqrt(min(self.cleanValues))) > 1:
                     return True
         return False
+
+

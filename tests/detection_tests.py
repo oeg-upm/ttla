@@ -2,6 +2,9 @@ import detect
 from app import app
 import unittest
 import os
+from detect.Detection import Detection
+from commons import CATEGORICAL, ORDINAL, SEQUENTIAL, RATIO_INTERVAL, HIERARCHICAL, COUNTS
+
 
 DATA_HOME = os.path.join(os.path.abspath("tests"), 'data')
 
@@ -30,8 +33,34 @@ class DetectionTests(unittest.TestCase):
     #     # on the specified path
     #     self.assertTrue(False)
 
-    def test_detect_categorical_binary(self):
-        categ_file = os.path.join(DATA_HOME, 'categorical_binary.csv')
-        # print("categorical file path: "+str(categ_file))
-        types = detect.detect_column_types(categ_file)
-        self.assertEqual(types, [detect.UNKNOWN, detect.CATEGORICAL, detect.UNKNOWN])
+    # def test_detect_categorical_binary(self):
+    #     categ_file = os.path.join(DATA_HOME, 'categorical_binary.csv')
+    #     # print("categorical file path: "+str(categ_file))
+    #     types = detect.detect_column_types(categ_file)
+    #     self.assertEqual(types, [detect.UNKNOWN, detect.CATEGORICAL, detect.UNKNOWN])
+
+    def test_ordinal(self):
+        detect = Detection([1, 2, 3, 4, 5])  # ordinal
+        self.assertEqual(detect.type, ORDINAL)
+
+    def test_categorical(self):
+        detect = Detection([1, 1, 3, 3, 3, 3, 3, 5])
+        self.assertEqual(detect.type, CATEGORICAL)
+        detect = Detection([1, 1, 1, 1, 3, 3, 3, 3, 3, 5, 5, 5, 5])
+        self.assertEqual(detect.type, CATEGORICAL)
+
+    def test_sequential(self):
+        detect = Detection([2, 4, 6, 8, 10])  # sequential
+        self.assertEqual(detect.type, SEQUENTIAL)
+        detect = Detection([2, 5, 6, 8, 10])  # sequential
+        self.assertEqual(detect.type, SEQUENTIAL)
+        detect = Detection([0, 2, 4, 6, 9, 12, 15])  # sequential
+        self.assertEqual(detect.type, SEQUENTIAL)
+
+    def test_hierarchical(self):
+        detect = Detection([12312, 12327, 12339, 12347, 12358])  # hierarchical
+        self.assertEqual(detect.type, HIERARCHICAL)
+
+    def test_ratio_interval(self):
+        detect = Detection([28, 456, 2, 18, 12358])  # ratiointerval
+        self.assertEqual(detect.type, RATIO_INTERVAL)
