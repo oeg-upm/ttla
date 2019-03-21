@@ -1,5 +1,8 @@
 import os
 import pandas as pd
+from easysparql import *
+
+ENDPOINT = "https://dbpedia.org/sparql"
 
 proj_path = (os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 
@@ -36,8 +39,9 @@ def t2dv2_columns_of_kind(num_kind, sub_kind=None):
     meta_file_dir = os.path.join(meta_dir, 'T2Dv2_typology.csv')
     df = pd.read_csv(meta_file_dir)
     if sub_kind is None:
-        dfkind = df[df.kind==num_kind]
+        dfkind = df[df.kind == num_kind]
     else:
         dfkind = df[df.kind == num_kind and df.sub_kind == sub_kind]
     print(dfkind)
     return dfkind
+
