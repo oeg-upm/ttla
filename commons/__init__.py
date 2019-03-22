@@ -3,6 +3,9 @@ import pandas as pd
 from easysparql import *
 
 ENDPOINT = "https://dbpedia.org/sparql"
+MIN_NUM_OF_ENT_PER_PROP = 30  # the minimum number of entities per property (get_properties)
+QUERY_LIMIT = ""  # At the moment, we do not put any limit on the number of results
+
 
 proj_path = (os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 
@@ -17,6 +20,7 @@ RATIO_INTERVAL = "ratio-interval"
 # sub kinds
 CATEGORICAL = "categorical"
 SEQUENTIAL = "sequential"
+HIERARCHICAL = "hierarchical"
 RANDOM = "random"
 COUNTS = "counts"
 OTHER = "other"
@@ -26,7 +30,7 @@ OTHER = "other"
 # kinds and subkinds
 KINDS = {
     ORDINAL: [""],
-    NOMINAL: [CATEGORICAL, SEQUENTIAL, RANDOM],
+    NOMINAL: [CATEGORICAL, SEQUENTIAL, HIERARCHICAL, RANDOM],
     RATIO_INTERVAL: [COUNTS, OTHER],
 }
 
@@ -45,3 +49,33 @@ def t2dv2_columns_of_kind(num_kind, sub_kind=None):
     print(dfkind)
     return dfkind
 
+
+def get_numerics_from_list(nums_str_list):
+    """
+    :param nums_str_list: list of string or numbers or a mix
+    :return: list of numbers or None if less than 50% are numbers
+    """
+    nums = []
+    for c in nums_str_list:
+        n = get_num(c)
+        if n is not None:
+            nums.append(n)
+    if len(nums) < len(nums_str_list)/2:
+        return None
+    return nums
+
+
+
+def get_num(num_or_str):
+    """
+    :param num_or_str:
+    :return: number or None if it is not a number
+    """
+    if isinstance(num_or_str, (int, float)):
+        return num_or_str
+    elif isinstance(num_or_str, basestring):
+        if '.' in num_or_str or ',' in num_or_str or num_or_str.isdigit():
+            try:
+                return float(num_or_str.replace(',', ''))
+            except Exception as e:
+                return None
