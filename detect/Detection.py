@@ -13,10 +13,10 @@ Questions:
 we dont check that now; not sure for which cases it is necessary now
 Answer: I added that in the categorical, and it should be added to the sequencial as well
 2) should this be sequential? [0,2,4,6,9,12,15]
-Answer: This looks like a simple counts to me. 
+Answer: This looks like a simple counts to me.
 3) in hierarchical do all values have to be unique or like 80%? same in other cases, where it is
 necessary and what is the treshold for that?
-Answer: I think Hierarchical can be labeled if they are from the same source (within the same range and have the 
+Answer: I think Hierarchical can be labeled if they are from the same source (within the same range and have the
 same number of digits)
 4) in hierarchical do all numbers have to have the same number of digits or like 80%?
 Answer: All of them (we assume the data is clean in a way) if not, it should be much higher like 99% and less than 10 items
@@ -30,8 +30,8 @@ Answer: let us make it a much, and have a table in the paper about the pros and 
 is that okay that in all cases it will fall there? there is a really likaly there will be a lot of random crap there
 Answer: Yes, ratio-interval-other would have a lot of crap as a result. Because we are not able to detect random nominals
 9) should this be [1,1,3,3,3,3,3,5] categorical or ratiointerval?
-This should be categorical. We need to have a formula to balance when it. We could have a formula based on the 
-minimum number of values in a numeric property. I think this could be done. 
+This should be categorical. We need to have a formula to balance when it. We could have a formula based on the
+minimum number of values in a numeric property. I think this could be done.
 """
 
 
@@ -40,7 +40,17 @@ class Detection(object):
     def __init__(self, values):
         self.values = values
         self.cleanValues = self.preprocessing()
+        self.conditions = self.check_conditions()
         self.type = self.getType()
+
+
+    """ check if values nonnegative and real"""
+    def check_conditions(self):
+        for k in self.cleanValues:
+            if k < 0 or not self.is_int(k):
+                logger.debug("Breaks the rule of being nonnegative and real: %s" % (str(k)))
+                return False
+        return True
 
     """ function for cleaning the column """
     def preprocessing(self):
@@ -50,9 +60,9 @@ class Detection(object):
 
         if self.is_ordinal():
             return ORDINAL
-        elif self.is_categorical():
+        elif self.conditions and self.is_categorical():
             return CATEGORICAL
-        elif self.is_sequential():
+        elif self.conditions and self.is_sequential():
             return SEQUENTIAL
         elif self.is_hierarchical():
             return HIERARCHICAL
@@ -68,6 +78,7 @@ class Detection(object):
         if all(x == diffs[0] for x in diffs) and self.cleanValues[0] == 1:
             return True
         return False
+
 
     def is_categorical(self):
         """
