@@ -48,6 +48,19 @@ class DetectionTests(unittest.TestCase):
         self.assertEqual(detect.type, CATEGORICAL)
         detect = Detection([1, 1, 1, 1, 3, 3, 3, 3, 3, 5, 5, 5, 5])
         self.assertEqual(detect.type, CATEGORICAL)
+        img_size = [220, 200, 220,200,200,200,220,270,250,200,220,200,250, 200,200,250,200,220,200,220,
+                    220,250,220,200,220,250,200,200,200,100,200]
+        detect = Detection(img_size)
+        self.assertEqual(detect.type, CATEGORICAL)
+        neg_cat = [220, 200, 220,200,200,200,220,-270,250,200,220,200,250, 200,200,250,200,220,200,220,
+                    220,250,220,200,220,250,200,200,200,100,200]
+        detect = Detection(neg_cat)
+        self.assertNotEqual(detect.type, CATEGORICAL)
+        float_cat = [220.0, 200.1, 220,200,200,200,220,-270,250,200,220,200,250, 200,200,250,200,220,200,220,
+                    220,250,220,200,220,250,200,200,200,100,200]
+        detect = Detection(float_cat)
+        self.assertNotEqual(detect.type, CATEGORICAL)
+
 
     def test_sequential(self):
         detect = Detection([2, 4, 6, 8, 10])  # sequential

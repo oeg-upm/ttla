@@ -31,3 +31,36 @@ class LabelingTests(unittest.TestCase):
         stat, pval = sm.KSTest(bag1, bag2)
         self.assertAlmostEqual(stat, 0.333, places=3)
         self.assertAlmostEqual(pval, 0.976, places=3)
+
+    def test_model_contruction(self):
+        import time
+        from label import model_construction
+        model_construction.TEST = True
+        # start = time.time()
+        class_uri = "http://dbpedia.org/ontology/BadmintonPlayer"
+        model_construction.build_model(class_uri)
+        # end = time.time()
+        # print("class: %s took %s" % (class_uri, str(end-start)))
+        # start = time.time()
+        # class_uri = "http://dbpedia.org/ontology/Pope"
+        # model_construction.build_model(class_uri)
+        # end = time.time()
+        # print("class: %s took %s" % (class_uri, str(end-start)))
+        #
+        # start = time.time()
+        # class_uri = "http://dbpedia.org/ontology/Battery"
+        # model_construction.build_model(class_uri)
+        # end = time.time()
+        # print("class: %s took %s" % (class_uri, str(end-start)))
+        #
+        # start = time.time()
+        # class_uri = "http://dbpedia.org/ontology/DigitalCamera"
+        # model_construction.build_model(class_uri)
+        # end = time.time()
+        # print("class: %s took %s" % (class_uri, str(end-start)))
+        #
+        # start = time.time()
+        # class_uri = "http://dbpedia.org/ontology/FileSystem"
+        # model_construction.build_model(class_uri)
+        # end = time.time()
+        # print("class: %s took %s" % (class_uri, str(end-start)))

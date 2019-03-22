@@ -1,8 +1,12 @@
 from SPARQLWrapper import SPARQLWrapper, JSON
-import commons
+from __init__ import MIN_NUM_OF_ENT_PER_PROP
+from __init__ import QUERY_LIMIT as COMMONS_QUERY_LIMIT
 
 
-def get_properties(endpoint, class_uri, min_num):
+QUERY_LIMIT = COMMONS_QUERY_LIMIT
+
+
+def get_properties(endpoint, class_uri, min_num=MIN_NUM_OF_ENT_PER_PROP):
     """
     :param endpoint:
     :param class_uri:
@@ -26,6 +30,22 @@ def get_properties(endpoint, class_uri, min_num):
     results = run_query(query=query, endpoint=endpoint)
     properties = [r['p']['value'] for r in results if r['num'] >= min_num]
     return properties
+
+
+def get_objects(endpoint, class_uri, property_uri):
+    """
+    :param endpoint:
+    :param class_uri:
+    :param property_uri:
+    :return:
+    """
+    class_uri_stripped = get_url_stripped(class_uri)
+    property_uri_stripped = get_url_stripped(property_uri)
+    query = """
+        select ?o where{ ?s  a <%s>. ?s <%s> ?o} %s
+    """ % (class_uri_stripped, property_uri_stripped, QUERY_LIMIT)
+    objects = run_query(query=query, endpoint=endpoint)
+    return [o['o']['value'] for o in objects]
 
 
 def run_query(query=None, endpoint=None, raiseexception=False):

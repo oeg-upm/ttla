@@ -5,12 +5,14 @@ from easysparql import *
 ENDPOINT = "https://dbpedia.org/sparql"
 MIN_NUM_OF_ENT_PER_PROP = 30  # the minimum number of entities per property (get_properties)
 QUERY_LIMIT = ""  # At the moment, we do not put any limit on the number of results
-
+MIN_NUM_NUMS = 30  # The minimum number of values that will be annotated, this is to ignore small size
 
 proj_path = (os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 
 data_dir = os.path.join(proj_path, 'data')
 meta_dir = os.path.join(proj_path, 'meta')
+models_dir = os.path.join(proj_path, 'local_models')
+log_dir = os.path.join(proj_path, 'local_logs')
 
 # kinds
 NOMINAL = "nominal"
@@ -65,7 +67,6 @@ def get_numerics_from_list(nums_str_list):
     return nums
 
 
-
 def get_num(num_or_str):
     """
     :param num_or_str:
@@ -79,3 +80,16 @@ def get_num(num_or_str):
                 return float(num_or_str.replace(',', ''))
             except Exception as e:
                 return None
+
+
+def class_uri_to_fname(class_uri):
+    """
+    :param class_uri:
+    :return:
+    """
+    if class_uri[:7] == "http://":
+        class_dname = class_uri[7:]
+    elif class_uri[:8] == "https://":
+        class_dname = class_uri[8:]
+    class_fname = class_dname.replace('/', '__').replace(',', '').replace('#', '_')#.replace('-', '_')
+    return class_fname
