@@ -56,10 +56,12 @@ class Detection(object):
             return SEQUENTIAL
         elif self.is_hierarchical():
             return HIERARCHICAL
-        elif self.is_ratiointerval():
-            return RATIO_INTERVAL
         else:
-            return 'unknown'
+            return RATIO_INTERVAL
+        # elif self.is_ratiointerval():
+        #     return RATIO_INTERVAL
+        # else:
+        #     return 'unknown'
 
     def is_ordinal(self):
         diffs = [j-i for i, j in zip(self.cleanValues[:-1], self.cleanValues[1:])]
@@ -74,12 +76,10 @@ class Detection(object):
         :return: true of false
         """
         cc = Counter(self.cleanValues)
-        # if len(cc.keys()) <= math.sqrt(len(self.cleanValues)):
         if len(cc.keys()) <= len(self.cleanValues)**(1/1.5):
             for k in cc.keys():
-                if k < 0 or (k-int(k) > 0):
+                if k < 0 or not self.is_int(k):
                     logger.debug("Not categorical because the value is: %s" % (str(k)))
-                    #print("categorical breakage: %s" % (str(k)))
                     return False
             return True
         return False
@@ -109,7 +109,7 @@ class Detection(object):
         for i in self.cleanValues:
             lengths.append(len(str(i)))
         mostPopular = max(set(lengths), key = lengths.count)
-        if lengths.count(mostPopular) >= (int(len(lengths)*0.8)):
+        if lengths.count(mostPopular) >= (int(len(lengths)*0.99)):
             seen = set()
             if not any(i in seen or seen.add(i) for i in self.cleanValues):
                 return True
@@ -122,14 +122,17 @@ class Detection(object):
     #             if (math.sqrt(max(self.cleanValues)) - math.sqrt(min(self.cleanValues))) > 1:
     #                 return True
     #     return False
-
+    #
     # def is_count(self):
     #     """
     #     Check if the it represents simple counts
     #     :return:
     #     """
-    def is_ratiointerval(self):
-        return True
+
+    def is_int(self, num):
+        return num-int(num) == 0
+
+
 
 
 def get_num_kind(nums):
