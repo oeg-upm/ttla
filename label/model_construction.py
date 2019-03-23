@@ -5,35 +5,90 @@ from features import compute_features
 import os
 import sys
 from multiprocessing import Process, Pipe
-
+from PPool.Pool import Pool
 
 import logging
 from commons.logger import set_config
 logger = set_config(logging.getLogger(__name__))
 
-
+NUM_OF_PROCESSES = 20
 ENDPOINT = commons.ENDPOINT
 TEST = False
 
-# I am working on this to speedup the process of fetching the data
-# def features_gatherer(reciever_p, sender_p):
-#     """
-#     :param d:
-#     :param input_p:
-#     :param output_p:
-#     :return:
-#     """
-#     pairs = []
-#     while True:
-#         d = reciever_p.recv()
-#         if d is None:
-#             sender_p.send(pairs)
-#             return
-#         else:
-#             pairs.append(d)
-#
-#
-# def get_features_and_kinds_multi_thread(class_uri):
+
+def features_gatherer(reciever_p, sender_p):
+    """
+    :param d:
+    :param input_p:
+    :param output_p:
+    :return:
+    """
+    pairs = []
+    while True:
+        d = reciever_p.recv()
+        if d is None:
+            sender_p.send(pairs)
+            return
+        else:
+            pairs.append(d)
+
+
+def features_and_kinds_func(class_uri, property_uri, pipe):
+    """
+    :param property_uri:
+    :return:
+    """
+    values = commons.get_objects(endpoint=ENDPOINT, class_uri=class_uri, property_uri=property_uri)
+    logger.debug("got %d objects for property %s" % (len(values), property_uri))
+    nums = commons.get_numerics_from_list(values)
+    if nums and len(nums) > commons.MIN_NUM_NUMS:
+        logger.debug("%d of them are nums of property %s" % (len(nums), property_uri))
+        kind, new_nums = detect.get_kind_and_nums(nums)
+        logger.debug("detect kind: %s for property %s" % (kind, property_uri))
+        features = compute_features(kind=kind, nums=new_nums)
+        if features is None:
+            logger.debug("No features for property %s" % property_uri)
+            return
+
+        logger.debug("property %s features: %s" % (property_uri, str(features)))
+        pair = {
+            'kind': kind,
+            'features': features,
+            'property_uri': property_uri,
+        }
+        pipe.send(pair)
+
+
+def get_features_and_kinds_multi_thread(class_uri):
+    """
+    :param class_uri:
+    :return:
+    """
+    logger.debug("ask for properties")
+    properties = commons.get_properties(class_uri=class_uri, endpoint=ENDPOINT)
+    logger.debug("properties: "+str(len(properties)))
+    features_send_pipe, features_recieve_pipe = Pipe()
+    gatherer_send_pipe, gatherer_reciever_pipe = features_send_pipe, features_recieve_pipe
+    gatherer = Process(target=features_gatherer, args=(gatherer_reciever_pipe, gatherer_send_pipe))
+    gatherer.start()
+    params = []
+    for p in properties:
+        params.append((class_uri, p, features_send_pipe))
+
+    print("running the pool")
+    pool = Pool(max_num_of_processes=NUM_OF_PROCESSES, func=features_and_kinds_func, params_list=params)
+    pool.run()
+    print("finished the pool")
+    features_send_pipe.send(None)
+    print("waiting for the gathere")
+    gatherer.join()
+    print("gatherer finished")
+    fk_pairs = features_recieve_pipe.recv()
+    return fk_pairs
+
+
+# This is no longer in use, we replaced it with multi-threaded function
+# def get_features_and_kinds(class_uri):
 #     """
 #     :param class_uri:
 #     :return:
@@ -42,18 +97,9 @@ TEST = False
 #     logger.debug("ask for properties")
 #     properties = commons.get_properties(class_uri=class_uri, endpoint=ENDPOINT)
 #     logger.debug("properties: "+str(len(properties)))
-#     features_send_pipe, features_recieve_pipe = Pipe()
-#     gatherer_reciever_pipe, gatherer_send_pipe = features_send_pipe, features_recieve_pipe
-#     gatherer = Process(target=features_gatherer, args=(gatherer_reciever_pipe, gatherer_send_pipe))
-#     gatherer.start()
-#
-#     params = []
 #     for p in properties:
-#         params.append((p, features_send_pipe))
-#
-#
-#
-#
+#         # if p != "http://dbpedia.org/property/beds":
+#         #     continue
 #         logger.debug("objects for property: "+p)
 #         values = commons.get_objects(endpoint=ENDPOINT, class_uri=class_uri, property_uri=p)
 #         logger.debug("got %d objects" % len(values))
@@ -73,49 +119,7 @@ TEST = False
 #                 'property_uri': p,
 #             }
 #             fk_pairs.append(pair)
-#         # else:
-#         #     logger.debug("no enough nums: "+str(nums))
-#
-#     features_send_pipe.send(None)
-#     gatherer.join()
-#     fk_pairs = features_recieve_pipe.recv()
 #     return fk_pairs
-
-
-def get_features_and_kinds(class_uri):
-    """
-    :param class_uri:
-    :return:
-    """
-    fk_pairs = []
-    logger.debug("ask for properties")
-    properties = commons.get_properties(class_uri=class_uri, endpoint=ENDPOINT)
-    logger.debug("properties: "+str(len(properties)))
-    for p in properties:
-        # if p != "http://dbpedia.org/property/beds":
-        #     continue
-        logger.debug("objects for property: "+p)
-        values = commons.get_objects(endpoint=ENDPOINT, class_uri=class_uri, property_uri=p)
-        logger.debug("got %d objects" % len(values))
-        nums = commons.get_numerics_from_list(values)
-        if nums and len(nums) > commons.MIN_NUM_NUMS:
-            logger.debug("%d of them are nums" % len(nums))
-            kind, new_nums = detect.get_kind_and_nums(nums)
-            logger.debug("detect kind: "+kind)
-            features = compute_features(kind=kind, nums=new_nums)
-            if features is None:
-                logger.debug("No features")
-                continue
-            logger.debug("computed features: "+str(features))
-            pair = {
-                'kind': kind,
-                'features': features,
-                'property_uri': p,
-            }
-            fk_pairs.append(pair)
-        # else:
-        #     logger.debug("no enough nums: "+str(nums))
-    return fk_pairs
 
 
 def build_model(class_uri):
@@ -138,7 +142,15 @@ def build_model(class_uri):
         logger.debug("Model already exists")
         return model_fdir
 
-    features_and_kinds = get_features_and_kinds(class_uri=class_uri)
+    # if multi_threading:
+    #     print("multi threading")
+    #     features_and_kinds = get_features_and_kinds_multi_thread(class_uri=class_uri)
+    # else:
+    #     print("single thread")
+    #     features_and_kinds = get_features_and_kinds(class_uri=class_uri)
+
+    features_and_kinds = get_features_and_kinds_multi_thread(class_uri=class_uri)
+
     model_txt = ""
     logger.debug("num of features and kinds: %d" % (len(features_and_kinds)))
     for fk in features_and_kinds:
