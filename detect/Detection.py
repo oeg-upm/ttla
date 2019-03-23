@@ -122,12 +122,13 @@ class Detection(object):
     #             if (math.sqrt(max(self.cleanValues)) - math.sqrt(min(self.cleanValues))) > 1:
     #                 return True
     #     return False
-    #
-    # def is_count(self):
-    #     """
-    #     Check if the it represents simple counts
-    #     :return:
-    #     """
+
+    def is_count(self):
+        """
+        Check if the it represents simple counts
+        :return:
+        """
+        
 
     def is_int(self, num):
         return num-int(num) == 0
