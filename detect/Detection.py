@@ -1,7 +1,8 @@
 from collections import Counter
 import math
-from commons import CATEGORICAL, ORDINAL, SEQUENTIAL, RATIO_INTERVAL, HIERARCHICAL, COUNTS
+from commons import CATEGORICAL, ORDINAL, SEQUENTIAL, RATIO_INTERVAL, HIERARCHICAL, COUNTS, OTHER
 import logging
+import numpy as np
 from commons.logger import set_config
 
 logger = set_config(logging.getLogger(__name__))
@@ -44,13 +45,25 @@ class Detection(object):
         self.conditions = self.check_conditions()
         self.type = self.getType()
 
-
     """ check if values nonnegative and real"""
     def check_conditions(self):
+        num_vals = len(self.cleanValues)
+        grace_percentage = 0.05
+        num_neg_float = 0
+        new_vals = []
         for k in self.cleanValues:
             if k < 0 or not self.is_int(k):
-                logger.debug("Breaks the rule of being nonnegative and real: %s" % (str(k)))
-                return False
+                num_neg_float+=1
+                logger.debug("Breaks the rule of being nonnegative and real: %s, num of vals: %d" % (str(k), num_vals))
+                if num_neg_float*1.0/num_vals >= grace_percentage:
+                    # logger.debug("negfloat: %d, num_vals: %d, formula: %f" % (num_neg_float,num_vals,(num_neg_float*1.0/num_vals)))
+                    return False
+            else:
+                new_vals.append(k)
+        self.cleanValues = new_vals
+        # self.values = new_vals
+        # for k in self.cleanValues:
+        #     print k
         return True
 
     """ function for cleaning the column """
@@ -67,19 +80,16 @@ class Detection(object):
             return SEQUENTIAL
         elif self.is_hierarchical():
             return HIERARCHICAL
+        elif self.is_count():
+            return COUNTS
         else:
-            return RATIO_INTERVAL
-        # elif self.is_ratiointerval():
-        #     return RATIO_INTERVAL
-        # else:
-        #     return 'unknown'
+            return OTHER
 
     def is_ordinal(self):
         diffs = [j-i for i, j in zip(self.cleanValues[:-1], self.cleanValues[1:])]
         if all(x == diffs[0] for x in diffs) and self.cleanValues[0] == 1 and diffs[0] != 0:
             return True
         return False
-
 
     def is_categorical(self):
         """
@@ -140,12 +150,27 @@ class Detection(object):
         Check if the it represents simple counts
         :return:
         """
-        
+        if not self.conditions:
+            return False
+
+        q1 = np.quantile(self.cleanValues, q=0.25)
+        q2 = np.quantile(self.cleanValues, q=0.5)
+        q3 = np.quantile(self.cleanValues, q=0.75)
+        p95 = np.quantile(self.cleanValues, q=0.95)
+        p_small = np.quantile(self.cleanValues, q=0.05)
+        if p_small == 0:
+            p_small = np.quantile(self.cleanValues, q=0.1)
+            if p_small == 0:
+                p_small = 1
+        is_outlier = 1.5*(q3-q1) + q3 <= p95
+        first_increase = (q2-p_small)/p_small >= 2
+        second_increase = (p95 - q2) / q2 >= 2
+        logger.debug("is_count check> outlier: %s , first: %s , second: %s" % (str(is_outlier), str(first_increase),
+                                                                   str(second_increase)))
+        return is_outlier and first_increase and second_increase
 
     def is_int(self, num):
         return num-int(num) == 0
-
-
 
 
 def get_num_kind(nums):
@@ -158,3 +183,16 @@ def get_num_kind(nums):
     num_kind = d.getType()
     del d
     return num_kind
+
+
+def get_kind_and_nums(nums):
+    """
+    This is used as a wrapper to be called by other models
+    :param nums:
+    :return:
+    """
+    d = Detection(nums)
+    num_kind = d.getType()
+    new_nums = d.cleanValues
+    del d
+    return num_kind, new_nums

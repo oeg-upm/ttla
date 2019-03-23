@@ -3,7 +3,7 @@ from app import app
 import unittest
 import os
 from detect.Detection import Detection
-from commons import CATEGORICAL, ORDINAL, SEQUENTIAL, RATIO_INTERVAL, HIERARCHICAL, COUNTS
+from commons import CATEGORICAL, ORDINAL, SEQUENTIAL, HIERARCHICAL, COUNTS, OTHER
 
 
 DATA_HOME = os.path.join(os.path.abspath("tests"), 'data')
@@ -52,28 +52,31 @@ class DetectionTests(unittest.TestCase):
                     220,250,220,200,220,250,200,200,200,100,200]
         detect = Detection(img_size)
         self.assertEqual(detect.type, CATEGORICAL)
-        neg_cat = [220, 200, 220,200,200,200,220,-270,250,200,220,200,250, 200,200,250,200,220,200,220,
+        neg_cat = [220, 200, 220,200,200,200,220,-270,250,200,220,200,-250, 200,200,250,200,-220,200,-220,
                     220,250,220,200,220,250,200,200,200,100,200]
         detect = Detection(neg_cat)
         self.assertNotEqual(detect.type, CATEGORICAL)
-        float_cat = [220.0, 200.1, 220,200,200,200,220,-270,250,200,220,200,250, 200,200,250,200,220,200,220,
-                    220,250,220,200,220,250,200,200,200,100,200]
+        float_cat = [220.0, 200.1, 220.1, 200.2,200.3,200.5,220,270,250,200,220,200,250, 200,200,250,-200,220,200,220,
+                    220,250,220,200,220,250,200,-200,200,100,-200]
         detect = Detection(float_cat)
         self.assertNotEqual(detect.type, CATEGORICAL)
 
-
     def test_sequential(self):
-        detect = Detection([2, 4, 6, 8, 10])  # sequential
+        detect = Detection([2, 4, 6, 8, 10])
         self.assertEqual(detect.type, SEQUENTIAL)
-        detect = Detection([2, 5, 6, 8, 10])  # sequential
+        detect = Detection([2, 5, 6, 8, 10])
         self.assertEqual(detect.type, SEQUENTIAL)
-        detect = Detection([0, 2, 4, 6, 9, 12, 15])  # sequential
+        detect = Detection([0, 2, 4, 6, 9, 12, 15])
         self.assertEqual(detect.type, SEQUENTIAL)
 
     def test_hierarchical(self):
-        detect = Detection([12312, 12327, 12339, 12347, 12358])  # hierarchical
+        detect = Detection([12312, 12327, 12339, 12347, 12358])
         self.assertEqual(detect.type, HIERARCHICAL)
 
-    def test_ratio_interval(self):
-        detect = Detection([28, 456, 2, 18, 12358])  # ratiointerval
-        self.assertEqual(detect.type, RATIO_INTERVAL)
+    def test_counts(self):
+        detect = Detection([28, 456, 2, 18, 12358])
+        self.assertEqual(detect.type, COUNTS)
+
+    def test_other(self):
+        detect = Detection([28, 456, 2, 18, 200])
+        self.assertEqual(detect.type, OTHER)
