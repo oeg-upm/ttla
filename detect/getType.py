@@ -1,8 +1,13 @@
 from Detection import Detection
 
+detect = Detection([1,3,5]) # ordinal
+print(detect.type)
 
 detect = Detection([1,2,3,4,5]) # ordinal
 print(detect.type)
+
+
+
 
 # why is this not categorical
 detect = Detection([1,1,3,3,3,3,3,5])  # ratiointerval

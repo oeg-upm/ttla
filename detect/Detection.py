@@ -59,13 +59,13 @@ class Detection(object):
 
     def getType(self):
 
-        if self.is_ordinal():
+        if self.conditions and self.is_ordinal():
             return ORDINAL
         elif self.conditions and self.is_categorical():
             return CATEGORICAL
         elif self.conditions and self.is_sequential():
             return SEQUENTIAL
-        elif self.is_hierarchical():
+        elif self.conditions and self.is_hierarchical():
             return HIERARCHICAL
         else:
             return RATIO_INTERVAL
