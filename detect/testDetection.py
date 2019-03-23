@@ -1,0 +1,75 @@
+import os
+import pandas as pd
+import math
+
+
+from Detection import get_num_kind, get_kind_and_nums
+from Detection import Detection
+
+
+proj_path = (os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
+data_dir = os.path.join(proj_path, 'data')
+meta_dir = os.path.join(proj_path, 'meta')
+
+
+def get_numerics_from_list(nums_str_list):
+    """
+    :param nums_str_list: list of string or numbers or a mix
+    :return: list of numbers or None if less than 50% are numbers
+    """
+    nums = []
+    for c in nums_str_list:
+        n = get_num(c)
+        if n is not None and not math.isnan(n):
+            nums.append(n)
+    if len(nums) < len(nums_str_list)/2:
+        return None
+    return nums
+
+
+def get_num(num_or_str):
+    """
+    :param num_or_str:
+    :return: number or None if it is not a number
+    """
+    if isinstance(num_or_str, (int, float)):
+        return num_or_str
+    elif isinstance(num_or_str, basestring):
+        if '.' in num_or_str or ',' in num_or_str or num_or_str.isdigit():
+            try:
+                return float(num_or_str.replace(',', ''))
+            except Exception as e:
+                return None
+
+
+def get_column_type(filename, columnid):
+    column_type = 'unknown'
+    file_path = os.path.join(data_dir, 'T2Dv2/') +filename+ '.csv'
+    dftestfile = pd.read_csv(file_path)
+    values = dftestfile.iloc[ : , int(columnid) ]
+
+    numbers_list = get_numerics_from_list(values)
+    if numbers_list != None:
+        column_type = get_num_kind(numbers_list)
+    del dftestfile
+    return column_type
+
+
+
+count_successful = 0
+count_failed = 0
+count_overall = 0
+meta_file_dir = os.path.join(meta_dir, 'T2Dv2_typology.csv')
+df = pd.read_csv(meta_file_dir)
+for index, row in df.iterrows():
+    if not math.isnan(row['columnid']):
+        count_overall += 1
+        detected_type = get_column_type(row['filename'], row['columnid'])
+        if detected_type == row['kind'] or detected_type == row['sub_kind']:
+            count_successful += 1
+        else:
+            count_failed += 1
+
+print("successfully matched: " + str(count_successful))
+print("unsuccessfully matched: " + str(count_failed))
+print("Overall attempts couter: " + str(count_overall))
