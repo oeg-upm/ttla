@@ -31,7 +31,7 @@ def compute_features(kind, nums):
     if kind in [commons.HIERARCHICAL]:
         return None
     features = [trimean_feature(transformed)]
-    if kind == commons.COUNTS:
+    if kind == commons.CATEGORICAL:
         features += categorical_ratio_feature(transformed)
     return features
 

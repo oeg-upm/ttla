@@ -1,4 +1,4 @@
-from Detection import get_num_kind
+from Detection import get_num_kind, get_kind_and_nums
 # import pandas as pd
 #
 # CATEGORICAL = 'categorical'
