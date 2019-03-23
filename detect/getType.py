@@ -26,3 +26,13 @@ print(detect.type)
 
 detect = Detection([28,456,2,18,12358]) # ratiointerval
 print(detect.type)
+
+detect = Detection([28.5,456,2,18,12358]) # ratiointerval
+print(detect.type)
+
+detect = Detection([28,456,2,18,-12358]) # ratiointerval
+print(detect.type)
+
+
+detect = Detection([1,1,1,1,1]) # ratiointerval
+print(detect.type)
