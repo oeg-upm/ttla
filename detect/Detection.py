@@ -1,11 +1,14 @@
 from collections import Counter
 import math
-from commons import CATEGORICAL, ORDINAL, SEQUENTIAL, RATIO_INTERVAL, HIERARCHICAL, COUNTS, OTHER
+from commons import CATEGORICAL, ORDINAL, SEQUENTIAL, RATIO_INTERVAL, HIERARCHICAL, COUNTS, OTHER, YEAR
 import logging
 import numpy as np
 from commons.logger import set_config
 
 logger = set_config(logging.getLogger(__name__))
+
+import dateparser
+from dateutil import parser
 
 
 """
@@ -80,10 +83,29 @@ class Detection(object):
             return SEQUENTIAL
         elif self.conditions and self.is_hierarchical():
             return HIERARCHICAL
-        elif self.is_count():
+        elif self.conditions and self.is_count():
             return COUNTS
+        #else:
+        #    return OTHER
+        elif self.conditions and self.check_year():
+            return YEAR
         else:
             return OTHER
+
+
+
+    def check_year(self):
+        count_date = 0
+        for val in self.cleanValues:
+            temp = self.is_date(int(val))
+            #print(temp, " -- ", val)
+            if temp and len(str(int(val))) == 4 and int(val) <= 2020:
+                count_date +=1
+
+        if count_date >= len(self.cleanValues)*0.9:
+            return True
+        return False
+
 
     def is_ordinal(self):
         diffs = [j-i for i, j in zip(self.cleanValues[:-1], self.cleanValues[1:])]
@@ -171,6 +193,14 @@ class Detection(object):
 
     def is_int(self, num):
         return num-int(num) == 0
+
+    def is_date(self, val):
+        try:
+            value = str(val)
+            temp2 = parser.parse(value)
+            return temp2
+        except:
+            return None
 
 
 def get_num_kind(nums):

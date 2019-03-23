@@ -24,8 +24,10 @@ CATEGORICAL = "categorical"
 SEQUENTIAL = "sequential"
 HIERARCHICAL = "hierarchical"
 RANDOM = "random"
-COUNTS = "counts"
+COUNTS = "count"
 OTHER = "other"
+
+YEAR = "year"
 
 
 # I am not sure of the below is useful

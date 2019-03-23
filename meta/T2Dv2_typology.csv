@@ -81,7 +81,7 @@
 28993628_1_6072768612274729703.tar.gz,Mountain,0,no idea,,,,
 28993628_1_6072768612274729703.tar.gz,Mountain,4,elevation,http://dbpedia.org/ontology/maximumElevation,2,ratio-interval,other
 29414811_12_251152470253168163.tar.gz,VideoGame,7,release ,http://dbpedia.org/property/years,0,year,
-29414811_13_8724394428539174350.tar.gz,VideoGame,1,release date,http://dbpedia.org/property/recorded,1,year,
+29414811_13_8724394428539174350.tar.gz,VideoGame,1,release date,http://dbpedia.org/property/recorded,0,year,
 29414811_2_4773219892816395776.tar.gz,VideoGame,8,year ,http://dbpedia.org/property/years,0,year,
 29414811_6_8221428333921653560.tar.gz,VideoGame,2,released,http://dbpedia.org/property/recorded,0,year,
 29857217_0_961038783966485949.tar.gz,Newspaper,0,number of transactions,,,ratio-interval,count
@@ -293,7 +293,7 @@
 86627271_6_2239821927452848323.tar.gz,Lake,2,altitude/ elevation,http://dbpedia.org/property/height,3,ratio-interval,other
 88353875_0_4876234304797064286.tar.gz,Mountain,0,elevation in m,,,ratio-interval,other
 88353875_0_4876234304797064286.tar.gz,Mountain,4,height in ft,http://dbpedia.org/ontology/maximumElevation,2,ratio-interval,other
-88732174_0_7321365014357502211.tar.gz,BaseballPlayer,1,year  ,http://dbpedia.org/property/year,1,year,
+88732174_0_7321365014357502211.tar.gz,BaseballPlayer,1,year  ,http://dbpedia.org/property/year,0,year,
 88732174_0_7321365014357502211.tar.gz,BaseballPlayer,4,squad number,http://dbpedia.org/ontology/squadNumber,2,nominal,sequential
 88732174_0_7321365014357502211.tar.gz,BaseballPlayer,0,war in respect to the team,,,ratio-interval,other
 89511064_0_2199624509082573904.tar.gz,Country,0,iso number,,,nominal,random
