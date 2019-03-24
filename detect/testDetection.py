@@ -58,42 +58,67 @@ def get_column_type(filename, columnid):
     return column_type
 
 
-
-count_successful = 0
-count_failed = 0
-count_overall = 0
-count_year_failed = 0
-count_year_successful = 0
-meta_file_dir = os.path.join(meta_dir, 'T2Dv2_typology.csv')
-df = pd.read_csv(meta_file_dir)
-for index, row in df.iterrows():
-    if not math.isnan(row['columnid']):
-        #if row['filename'] == '1146722_1_7558140036342906956.tar.gz':
-        count_overall += 1
-        detected_type = get_column_type(row['filename'], row['columnid'])
-        if detected_type == row['kind'] or detected_type == row['sub_kind']:
-            count_successful += 1
-            if detected_type == 'year':
-                count_year_successful += 1
-        else:
-            if row['kind'] == 'year' or row['sub_kind'] == 'year':
-                #print("%s | %s | %s - %s / %s" % (row['filename'], row['columnid'], detected_type, row['kind'], row['sub_kind']))
-                count_year_failed += 1
+def overall_evaluation():
+    count_successful = 0
+    count_failed = 0
+    count_overall = 0
+    count_year_failed = 0
+    count_year_successful = 0
+    meta_file_dir = os.path.join(meta_dir, 'T2Dv2_typology.csv')
+    df = pd.read_csv(meta_file_dir)
+    for index, row in df.iterrows():
+        if not math.isnan(row['columnid']):
+            #if row['filename'] == '1146722_1_7558140036342906956.tar.gz':
+            count_overall += 1
+            detected_type = get_column_type(row['filename'], row['columnid'])
+            if detected_type == row['kind'] or detected_type == row['sub_kind']:
+                count_successful += 1
+                if detected_type == 'year':
+                    count_year_successful += 1
             else:
-                print("%s | %s | %s - %s / %s" % (row['filename'], row['columnid'], detected_type, row['kind'], row['sub_kind']))
+                if row['kind'] == 'year' or row['sub_kind'] == 'year':
+                    #print("%s | %s | %s - %s / %s" % (row['filename'], row['columnid'], detected_type, row['kind'], row['sub_kind']))
+                    count_year_failed += 1
+                else:
+                    print("%s | %s | %s - %s / %s" % (row['filename'], row['columnid'], detected_type, row['kind'], row['sub_kind']))
 
-                count_failed += 1
-            #print("%s | %s | %s - %s / %s" % (row['filename'], row['columnid'], detected_type, row['kind'], row['sub_kind']))
+                    count_failed += 1
+                #print("%s | %s | %s - %s / %s" % (row['filename'], row['columnid'], detected_type, row['kind'], row['sub_kind']))
+
+    print("%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    print("successfully matched: " + str(count_successful))
+    print("unsuccessfully matched: " + str(count_failed))
+
+    print("failed year: " + str(count_year_failed))
+    print("success year: " + str(count_year_successful))
 
 
+    print("Overall attempts couter: " + str(count_overall))
 
 
-print("%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-print("successfully matched: " + str(count_successful))
-print("unsuccessfully matched: " + str(count_failed))
+def type_evaluation():
+    # "nominal", "ratio-interval"
+    numerical_types = ["ordinal", "categorical", "sequential", "hierarchical", "random", "count", "other", "year"]
+    count_types = {}
 
-print("failed year: " + str(count_year_failed))
-print("success year: " + str(count_year_successful))
+    for nt in numerical_types:
+        count_types[nt] = {'success': 0, 'failure': 0}
+
+    meta_file_dir = os.path.join(meta_dir, 'T2Dv2_typology.csv')
+    df = pd.read_csv(meta_file_dir)
+    for index, row in df.iterrows():
+        if not math.isnan(row['columnid']):
+            detected_type = get_column_type(row['filename'], row['columnid'])
+            if detected_type == row['kind'] or detected_type == row['sub_kind']:
+                count_types[detected_type]['success'] += 1
+            else:
+                if row['kind'] in count_types:
+                    count_types[row['kind']]['failure'] += 1
+                else:
+                    count_types[row['sub_kind']]['failure'] += 1
 
 
-print("Overall attempts couter: " + str(count_overall))
+    for key, value in count_types.items():
+        print(key + ": " + str(value['success']) + " correct out of " + str(value['failure']+value['success']))
+
+type_evaluation()
