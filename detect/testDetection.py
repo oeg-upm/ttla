@@ -1,7 +1,8 @@
+from loader import *
 import os
 import pandas as pd
 import math
-
+from commons import get_num
 
 from Detection import get_num_kind, get_kind_and_nums
 from Detection import Detection
@@ -27,24 +28,25 @@ def get_numerics_from_list(nums_str_list):
     return nums
 
 
-def get_num(num_or_str):
-    """
-    :param num_or_str:
-    :return: number or None if it is not a number
-    """
-    if isinstance(num_or_str, (int, float)):
-        return num_or_str
-    elif isinstance(num_or_str, basestring):
-        if '.' in num_or_str or ',' in num_or_str or num_or_str.isdigit():
-            try:
-                return float(num_or_str.replace(',', ''))
-            except Exception as e:
-                return None
+# def get_num(num_or_str):
+#     """
+#     :param num_or_str:
+#     :return: number or None if it is not a number
+#     """
+#     if isinstance(num_or_str, (int, float)):
+#         return num_or_str
+#     elif isinstance(num_or_str, basestring):
+#         if '.' in num_or_str or ',' in num_or_str or num_or_str.isdigit():
+#             try:
+#                 return float(num_or_str.replace(',', ''))
+#             except Exception as e:
+#                 return None
 
 
 def get_column_type(filename, columnid):
     column_type = 'unknown'
-    file_path = os.path.join(data_dir, 'T2Dv2/') +filename+ '.csv'
+    file_path = os.path.join(data_dir, 'T2Dv2',filename+ '.csv')
+    #file_path = os.path.join(data_dir, 'T2Dv2/') +filename+ '.csv'
     dftestfile = pd.read_csv(file_path)
     values = dftestfile.iloc[ : , int(columnid) ]
 

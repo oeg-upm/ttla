@@ -27,6 +27,7 @@ details will be mentioned here once we start.
 ```
 python tests/test.py
 ```
+*not that some tests may fail overtime as they depend on dbpedia*
 # Coverage: 
 ```
 coverage run --source=. --omit=.venv/*  tests/test.py
