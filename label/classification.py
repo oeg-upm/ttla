@@ -28,26 +28,33 @@ def classify(kind, class_uri, columns):
     predictions = []
     model_fdir = model_construction.build_model(class_uri=class_uri)
     fcm, centroid_names, max_num_of_features = load_model(kind, model_fdir)
+    if fcm is None:
+        logger.debug("empty fcm model")
+        return []
     for col in columns:
+        logger.debug("detect column kind")
         d = Detection(col)
         nums = d.cleanValues
         # Not sure if it is needed here
         # detected_kind = d.getType()
+        logger.debug("compute features")
         feats = features.compute_features(kind=kind, nums=nums)
         if feats is None:
             predictions.append([])
             continue
         # print("feats: "+str(feats))
         if kind == commons.CATEGORICAL:
+            logger.debug("add trailing zeros to categorical features")
             if max_num_of_features > len(feats):
                 feats += [0 for i in range((max_num_of_features)-len(feats))]
         data_array = np.array([feats])
         #data_array = data_array.transpose()
         # print(data_array)
+        logger.debug("predict the cluster for the given column")
         pred = fcm.predict(data_array)
         pred_with_names = zip(pred[0], centroid_names)
         pred_with_names.sort(key=itemgetter(0), reverse=True)
-        logger.debug(str(pred_with_names))
+        #logger.debug(str(pred_with_names))
         predictions.append(pred_with_names[:TOP_K])
     return predictions
 
@@ -65,7 +72,6 @@ def load_model(kind, model_fdir):
     centroids = []
     #centroids_names = list(df['property_uri'])
     centroids_names = []
-    logger.debug("properties loaded from the model: "+str(centroids_names))
     # centroids_names = [p for p in df['property_uri']]
     for idx, row in dfkind.iterrows():
     #for r in dfkind['features']:
@@ -92,8 +98,11 @@ def load_model(kind, model_fdir):
                 for i in range(additionals):
                     c.append(0)
         logger.debug("for categorical max_num_features: "+str(max_num_features))
-
+    if len(centroids) == 0:
+        return None, None, None
     fcm = FCM(n_clusters=len(centroids))
+    # print("centroids: "+str(centroids))
+    # print("len: "+str(len(centroids)))
     fcm.fit(centroids, range(len(centroids)))
     logger.debug("centroids: "+str(centroids))
     logger.debug("fcm centroids: "+str(fcm.cluster_centers_))

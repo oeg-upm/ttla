@@ -72,7 +72,8 @@ class Detection(object):
 
     """ function for cleaning the column """
     def preprocessing(self):
-        return self.values
+        return commons.get_numerics_from_list(self.values)
+        #return self.values
 
     def getType(self):
 
@@ -93,8 +94,6 @@ class Detection(object):
         else:
             return OTHER
 
-
-
     def check_year(self):
         count_date = 0
         for val in self.cleanValues:
@@ -106,7 +105,6 @@ class Detection(object):
         if count_date >= len(self.cleanValues)*0.9:
             return True
         return False
-
 
     def is_ordinal(self):
         diffs = [j-i for i, j in zip(self.cleanValues[:-1], self.cleanValues[1:])]

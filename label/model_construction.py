@@ -27,7 +27,10 @@ def features_gatherer(reciever_p, sender_p):
     while True:
         d = reciever_p.recv()
         if d is None:
-            sender_p.send(pairs)
+            for pair in pairs:
+                sender_p.send(pair)
+            sender_p.send(None)
+            logger.debug("gatherer sent all the pairs")
             return
         else:
             pairs.append(d)
@@ -80,10 +83,23 @@ def get_features_and_kinds_multi_thread(class_uri):
     pool.run()
     logger.debug("finished the pool")
     features_send_pipe.send(None)
+    logger.debug("recieving the pairs from the gatherer")
+    fk_pairs = []
+    fk_pair = features_recieve_pipe.recv()
+    while fk_pair is not None:
+        fk_pairs.append(fk_pair)
+        fk_pair = features_recieve_pipe.recv()
     logger.debug("waiting for the gathere")
     gatherer.join()
     logger.debug("gatherer finished")
-    fk_pairs = features_recieve_pipe.recv()
+    # print("fk pairs: "+str(fk_pairs))
+    # fk_pairs = []
+    # fk_pair = features_recieve_pipe.recv()
+    # while fk_pair is not None:
+    #     fk_pairs.append(fk_pair)
+    #     fk_pair = features_recieve_pipe.recv()
+
+    # fk_pairs = features_recieve_pipe.recv()
     return fk_pairs
 
 
