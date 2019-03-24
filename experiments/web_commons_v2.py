@@ -19,7 +19,7 @@ def get_processed_files(fdir):
     :return:
     """
     processed = []
-    df = pd.read_csv(fdir)
+    df = pd.read_csv(fdir, sep='\t')
     for idx, row in df.iterrows():
         processed.append(row['fname'])
     return processed
@@ -83,7 +83,7 @@ def label_experiment():
     for idx, row in df.iterrows():
         if row['columnid'] == '' or pd.isna(row['columnid']):# is np.nan:
             continue
-        if df['filename'] in processed_files:
+        if row['filename'] in processed_files:
             continue
         class_uri = "http://dbpedia.org/ontology/"+row['concept']
         if row['kind'] == commons.ORDINAL:
@@ -96,7 +96,7 @@ def label_experiment():
         for pred in predictions:
             for pair in pred:
                 append_score(scores_file, "\t".join([row['filename']+".csv", str(pair[0]), str(pair[1])]))
-        
+
 
 def print_help():
     help_msg = """
