@@ -33,6 +33,12 @@ def compute_features(kind, nums):
     features = [trimean_feature(transformed)]
     if kind == commons.CATEGORICAL:
         features += categorical_ratio_feature(transformed)
+    else:
+        # print("debugging")
+        # print("features: "+str(features))
+        # print("transformed: "+str(transformed))
+        features += [tstd_feature(trimean=features[0], nums=transformed)]
+        # print("success: "+str(features))
     return features
 
 
@@ -64,3 +70,16 @@ def categorical_ratio_feature(nums):
         perc = c[k]*1.0/tot
         percs.append(perc)
     return sorted(percs)
+
+
+def tstd_feature(trimean, nums):
+    """
+    standard deviation using the tri-mean instead of the mean
+    :return:
+    """
+    seg = 0
+    for x in nums:
+        seg += (x-trimean)**2
+
+    return math.sqrt(1.0/len(nums) * seg)
+

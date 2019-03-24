@@ -1,4 +1,4 @@
-from __init__ import *
+from loader import *
 import commons
 import detect
 from features import compute_features

@@ -1,9 +1,10 @@
 import sys
-from __init__ import commons
+from loader import *
+import commons
 
 
 def print_help():
-    help_msg="""TEST:
+    help_msg = """TEST:
     t2dv2
     olympic
     
