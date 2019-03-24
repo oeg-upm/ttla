@@ -44,8 +44,9 @@ class DetectionTests(unittest.TestCase):
         self.assertEqual(detect.type, ORDINAL)
 
     def test_categorical(self):
-        detect = Detection([1, 1, 3, 3, 3, 3, 3, 5])
-        self.assertEqual(detect.type, CATEGORICAL)
+        # Otherwise, things like weight will be as a categorical
+        # detect = Detection([1, 1, 3, 3, 3, 3, 3, 5])
+        # self.assertEqual(detect.type, CATEGORICAL)
         detect = Detection([1, 1, 1, 1, 3, 3, 3, 3, 3, 5, 5, 5, 5])
         self.assertEqual(detect.type, CATEGORICAL)
         img_size = [220, 200, 220,200,200,200,220,270,250,200,220,200,250, 200,200,250,200,220,200,220,

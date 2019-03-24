@@ -120,12 +120,15 @@ class Detection(object):
         :param col: pandas series
         :return: true of false
         """
+        if not self.conditions:
+            return False
         cc = Counter(self.cleanValues)
-        if len(cc.keys()) <= len(self.cleanValues)**(1/1.5):
-            for k in cc.keys():
-                if k < 0 or not self.is_int(k):
-                    logger.debug("Not categorical because the value is: %s" % (str(k)))
-                    return False
+        if len(cc.keys()) <= len(self.cleanValues)**(1/2.0):
+        # if len(cc.keys()) <= len(self.cleanValues)**(1/1.5):
+            # for k in cc.keys():
+            #     if k < 0 or not self.is_int(k):
+            #         logger.debug("Not categorical because the value is: %s" % (str(k)))
+            #         return False
             return True
         return False
 
