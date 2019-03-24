@@ -1,3 +1,4 @@
+from loader import *
 from collections import Counter
 import math
 from commons import CATEGORICAL, ORDINAL, SEQUENTIAL, RATIO_INTERVAL, HIERARCHICAL, COUNTS, OTHER, YEAR
@@ -7,7 +8,7 @@ from commons.logger import set_config
 
 logger = set_config(logging.getLogger(__name__))
 
-import dateparser
+# import dateparser
 from dateutil import parser
 
 

@@ -75,14 +75,14 @@ def get_features_and_kinds_multi_thread(class_uri):
     for p in properties:
         params.append((class_uri, p, features_send_pipe))
 
-    print("running the pool")
+    logger.debug("running the pool")
     pool = Pool(max_num_of_processes=NUM_OF_PROCESSES, func=features_and_kinds_func, params_list=params)
     pool.run()
-    print("finished the pool")
+    logger.debug("finished the pool")
     features_send_pipe.send(None)
-    print("waiting for the gathere")
+    logger.debug("waiting for the gathere")
     gatherer.join()
-    print("gatherer finished")
+    logger.debug("gatherer finished")
     fk_pairs = features_recieve_pipe.recv()
     return fk_pairs
 
