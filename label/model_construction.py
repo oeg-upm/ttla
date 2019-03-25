@@ -174,7 +174,7 @@ def build_model(class_uri):
         line = "%s\t%s\t%s\n" % (fk['property_uri'], fk['kind'], features_txt)
         model_txt+=line
     f = open(model_fdir, 'w')
-    f.write(model_txt)
+    f.write(model_txt.encode('utf-8'))
     f.close()
     return model_fdir
 

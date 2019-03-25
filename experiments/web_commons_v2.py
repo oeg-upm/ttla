@@ -91,7 +91,9 @@ def label_experiment():
         else:
             kind = row['sub_kind']
         # print("<"+str(row['columnid'])+">  "+str(type(row['columnid'])))
+        logger.debug("get column from file: "+row['filename'])
         col = get_column(row['filename'], int(row['columnid']))
+        logger.debug("classify: kind: %s , class: %s" % (kind, class_uri))
         predictions = classification.classify(kind=kind, class_uri=class_uri, columns=[col])
         for pred in predictions:
             for pair in pred:

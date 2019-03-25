@@ -82,6 +82,7 @@ def get_num(num_or_str):
                 return float(num_or_str.replace(',', ''))
             except Exception as e:
                 return None
+    return None
 
 
 def class_uri_to_fname(class_uri):
