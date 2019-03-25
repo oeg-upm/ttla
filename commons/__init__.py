@@ -14,6 +14,11 @@ meta_dir = os.path.join(proj_path, 'meta')
 models_dir = os.path.join(proj_path, 'local_models')
 log_dir = os.path.join(proj_path, 'local_logs')
 
+import logging
+from logger import set_config
+logger = set_config(logging.getLogger(__name__))
+
+
 # kinds
 NOMINAL = "nominal"
 ORDINAL = "ordinal"
@@ -38,6 +43,19 @@ KINDS = {
     RATIO_INTERVAL: [COUNTS, OTHER],
     YEAR: []
 }
+
+
+def get_column_from_meta(fname, column_id):
+    """
+    :param fname:
+    :param column_id:
+    :return:
+    """
+    logger.debug("get values for file: %s column %d" % (fname, column_id))
+    fdir = os.path.join(data_dir, 'T2Dv2', fname+".csv")
+    df = pd.read_csv(fdir)
+    col_name = df.columns.values[column_id]
+    return list(df[col_name])
 
 
 def t2dv2_columns_of_kind(num_kind, sub_kind=None):
@@ -75,7 +93,9 @@ def get_num(num_or_str):
     :param num_or_str:
     :return: number or None if it is not a number
     """
-    if isinstance(num_or_str, (int, float)):
+    if pd.isna(num_or_str):
+        return None
+    elif isinstance(num_or_str, (int, float)):
         return num_or_str
     elif isinstance(num_or_str, basestring):
         if '.' in num_or_str or ',' in num_or_str or num_or_str.isdigit():
