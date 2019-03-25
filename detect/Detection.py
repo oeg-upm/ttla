@@ -186,12 +186,21 @@ class Detection(object):
             p_small = np.quantile(self.cleanValues, q=0.1)
             if p_small == 0:
                 p_small = 1
+        # if p_small == 0 or q2 == 0:
+        if q2 == 0:
+            q2 = 1
+            # return False
         is_outlier = 1.5*(q3-q1) + q3 <= p95
-        first_increase = (q2-p_small)/p_small >= 2
-        second_increase = (p95 - q2) / q2 >= 2
-        logger.debug("is_count check> outlier: %s , first: %s , second: %s" % (str(is_outlier), str(first_increase),
-                                                                   str(second_increase)))
-        return is_outlier and first_increase and second_increase
+        first_increase = (q2-p_small)*1.0/p_small
+        is_first_increase = first_increase >= 2
+        second_increase = (p95 - q2)*1.0 / q2
+        is_second_increase = second_increase >= 2
+        # logger.debug("first: %.3f second: %.3f" % (first_increase, second_increase))
+        # logger.debug("is_count check> outlier: %s , first: %s , second: %s" % (str(is_outlier), str(is_first_increase),
+        #                                                            str(is_second_increase)))
+        #return is_outlier and is_first_increase and is_second_increase
+        #return is_outlier and ((is_first_increase and is_second_increase) or (is_second_increase and second_increase > first_increase*2))
+        return is_outlier and is_second_increase
 
     def is_int(self, num):
         return num-int(num) == 0

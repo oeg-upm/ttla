@@ -2,7 +2,7 @@ from loader import *
 import os
 import pandas as pd
 import math
-from commons import get_num
+from commons import get_num,  KINDS, get_column_from_meta
 
 from Detection import get_num_kind, get_kind_and_nums
 from Detection import Detection
@@ -43,19 +43,29 @@ def get_numerics_from_list(nums_str_list):
 #                 return None
 
 
+# def get_column_type(filename, columnid):
+#     column_type = 'unknown'
+#     file_path = os.path.join(data_dir, 'T2Dv2',filename+ '.csv')
+#     #file_path = os.path.join(data_dir, 'T2Dv2/') +filename+ '.csv'
+#     dftestfile = pd.read_csv(file_path)
+#     values = dftestfile.iloc[ : , int(columnid) ]
+#
+#     numbers_list = get_numerics_from_list(values)
+#
+#     if numbers_list != None:
+#         column_type = get_num_kind(numbers_list)
+#     del dftestfile
+#     return column_type
+
 def get_column_type(filename, columnid):
-    column_type = 'unknown'
-    file_path = os.path.join(data_dir, 'T2Dv2',filename+ '.csv')
-    #file_path = os.path.join(data_dir, 'T2Dv2/') +filename+ '.csv'
-    dftestfile = pd.read_csv(file_path)
-    values = dftestfile.iloc[ : , int(columnid) ]
-
-    numbers_list = get_numerics_from_list(values)
-
-    if numbers_list != None:
-        column_type = get_num_kind(numbers_list)
-    del dftestfile
-    return column_type
+    """
+    :param filename:
+    :param columnid:
+    :return: kind/sub-kind
+    """
+    col = get_column_from_meta(fname=filename, column_id=int(columnid))
+    d = Detection(list(col))
+    return d.getType()
 
 
 def overall_evaluation():
@@ -96,9 +106,55 @@ def overall_evaluation():
     print("Overall attempts couter: " + str(count_overall))
 
 
+# def type_evaluation():
+#     # "nominal", "ratio-interval"
+#     numerical_types = ["ordinal", "categorical", "sequential", "hierarchical", "random", "count", "other", "year"]
+#     count_types = {}
+#
+#     for nt in numerical_types:
+#         count_types[nt] = {'success': 0, 'failure': 0}
+#
+#     meta_file_dir = os.path.join(meta_dir, 'T2Dv2_typology.csv')
+#     df = pd.read_csv(meta_file_dir)
+#     for index, row in df.iterrows():
+#         if not math.isnan(row['columnid']):
+#             detected_type = get_column_type(row['filename'], row['columnid'])
+#             if detected_type == row['kind'] or detected_type == row['sub_kind']:
+#                 count_types[detected_type]['success'] += 1
+#             else:
+#                 if row['sub_kind'] == "count":
+#                     print row['filename'] + " - " + str(int(row['columnid']))
+#
+#                 if row['kind'] in count_types:
+#                     count_types[row['kind']]['failure'] += 1
+#                 else:
+#                     count_types[row['sub_kind']]['failure'] += 1
+#
+#     for key, value in count_types.items():
+#         # print(key + ": " + str(value['success']) + " correct out of " + str(value['failure']+value['success']))
+#         success = value['success']
+#         tot = value['failure']+value['success']
+#         if success > 0:
+#             perc = success*1.0/tot
+#             perc_str = str(round(perc, 3))
+#         elif tot == 0:
+#             perc_str = "-"
+#         else:
+#             perc = 0.0
+#             perc_str = str(perc)
+#         # print("%15s : %3d out of %3d : %.3f" % (key, success, tot, perc))
+#         print("%15s : %3d out of %3d : %s" % (key, success, tot, perc_str))
+
+
 def type_evaluation():
-    # "nominal", "ratio-interval"
-    numerical_types = ["ordinal", "categorical", "sequential", "hierarchical", "random", "count", "other", "year"]
+    numerical_types = []
+    for kind in KINDS:
+        if KINDS[kind] == []:
+            numerical_types.append(kind)
+        else:
+            for sub in KINDS[kind]:
+                numerical_types.append(sub)
+
     count_types = {}
 
     for nt in numerical_types:
@@ -106,19 +162,50 @@ def type_evaluation():
 
     meta_file_dir = os.path.join(meta_dir, 'T2Dv2_typology.csv')
     df = pd.read_csv(meta_file_dir)
+    df = df[df.columnid.notnull()]
+    print("shape: "+str(df.shape))
+
+    tot_cols = df.shape[0]
+
     for index, row in df.iterrows():
-        if not math.isnan(row['columnid']):
-            detected_type = get_column_type(row['filename'], row['columnid'])
-            if detected_type == row['kind'] or detected_type == row['sub_kind']:
-                count_types[detected_type]['success'] += 1
+        # if True:
+        # if not math.isnan(row['columnid']):
+        detected_type = get_column_type(row['filename'], row['columnid'])
+        if detected_type == row['kind'] or detected_type == row['sub_kind']:
+            count_types[detected_type]['success'] += 1
+        else:
+            if row['sub_kind'] == "count":
+                print row['filename'] + " - " + str(int(row['columnid']))
+
+            if row['kind'] in count_types:
+                count_types[row['kind']]['failure'] += 1
             else:
-                if row['kind'] in count_types:
-                    count_types[row['kind']]['failure'] += 1
-                else:
-                    count_types[row['sub_kind']]['failure'] += 1
+                count_types[row['sub_kind']]['failure'] += 1
 
 
     for key, value in count_types.items():
-        print(key + ": " + str(value['success']) + " correct out of " + str(value['failure']+value['success']))
+        # print(key + ": " + str(value['success']) + " correct out of " + str(value['failure']+value['success']))
+        success = value['success']
+        tot = value['failure'] + value['success']
+        if success > 0:
+            perc = success * 1.0 / tot
+            perc_str = str(round(perc, 3))
+        elif tot == 0:
+            perc_str = "-"
+        else:
+            perc = 0.0
+            perc_str = str(perc)
+        # print("%15s : %3d out of %3d : %.3f" % (key, success, tot, perc))
+        print("%15s : %3d out of %3d : %s" % (key, success, tot, perc_str))
 
-type_evaluation()
+
+    # verify
+    tot_correct = 0
+    tot_fail = 0
+    for key, value in count_types.items():
+        tot_correct += value['success']
+        tot_fail += value['failure']
+    print ("total correct: %d\n total wrong: %d\n summed: %d\n total: %d" % (tot_correct, tot_fail, tot_correct+tot_fail, tot_cols))
+
+if __name__ == "__main__":
+    type_evaluation()
