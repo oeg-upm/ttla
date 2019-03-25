@@ -30,7 +30,7 @@ def write_header_if_not(fdir):
     :param fdir:
     :return:
     """
-    header = 'fname\tmembership\tproperty_uri\n'
+    header = 'fname\tmembership\tk\tproperty_uri\n'
     if not os.path.isfile(fdir):
         f = open(fdir, 'w')
         f.write(header)
@@ -96,8 +96,9 @@ def label_experiment():
         logger.debug("classify: kind: %s , class: %s" % (kind, class_uri))
         predictions = classification.classify(kind=kind, class_uri=class_uri, columns=[col])
         for pred in predictions:
-            for pair in pred:
-                append_score(scores_file, "\t".join([row['filename']+".csv", str(pair[0]), str(pair[1])]))
+            # for pair in pred:
+            for idx, pair in enumerate(pred):
+                append_score(scores_file, "\t".join([row['filename']+".csv", str(idx+1), str(pair[0]), str(pair[1])]))
 
 
 def print_help():
