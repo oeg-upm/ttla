@@ -10,7 +10,7 @@
 11688006_0_8123036130090004213.tar.gz,Country,2,population,http://dbpedia.org/ontology/populationTotal,2,ratio-interval,count
 11688006_0_8123036130090004213.tar.gz,Country,1,area sq. km,http://dbpedia.org/property/statArea,3,ratio-interval,other
 11688006_0_8123036130090004213.tar.gz,Country,0,population density sq. km,,,ratio-interval,other
-11688006_0_8123036130090004213.tar.gz,Country,1,area sq. mi,http://dbpedia.org/property/statArea,5,ratio-interval,count
+11688006_0_8123036130090004213.tar.gz,Country,1,area sq. mi,http://dbpedia.org/property/statArea,5,ratio-interval,other
 11688006_0_8123036130090004213.tar.gz,Country,0,population density sq. mi,,,ratio-interval,other
 11833461_1_3811022039809817402.tar.gz,VideoGame,0,Pan European Game Information,,,nominal,categorical
 12746760_0_6703465836620308483.tar.gz,PoliticalParty,0,funding,,,ratio-interval,other
