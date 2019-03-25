@@ -33,9 +33,10 @@ YEAR = "year"
 # I am not sure of the below is useful
 # kinds and subkinds
 KINDS = {
-    ORDINAL: [""],
+    ORDINAL: [],
     NOMINAL: [CATEGORICAL, SEQUENTIAL, HIERARCHICAL, RANDOM],
     RATIO_INTERVAL: [COUNTS, OTHER],
+    YEAR: []
 }
 
 
