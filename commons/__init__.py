@@ -14,10 +14,6 @@ meta_dir = os.path.join(proj_path, 'meta')
 models_dir = os.path.join(proj_path, 'local_models')
 log_dir = os.path.join(proj_path, 'local_logs')
 
-import logging
-from logger import set_config
-logger = set_config(logging.getLogger(__name__))
-
 
 # kinds
 NOMINAL = "nominal"
@@ -51,7 +47,6 @@ def get_column_from_meta(fname, column_id):
     :param column_id:
     :return:
     """
-    logger.debug("get values for file: %s column %d" % (fname, column_id))
     fdir = os.path.join(data_dir, 'T2Dv2', fname+".csv")
     df = pd.read_csv(fdir)
     col_name = df.columns.values[column_id]

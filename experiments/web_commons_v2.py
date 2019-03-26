@@ -30,7 +30,7 @@ def write_header_if_not(fdir):
     :param fdir:
     :return:
     """
-    header = 'fname\tmembership\tk\tproperty_uri\n'
+    header = 'fname\tk\tmembership\tproperty_uri\tcolumn_id\n'
     if not os.path.isfile(fdir):
         f = open(fdir, 'w')
         f.write(header)
@@ -79,15 +79,22 @@ def label_experiment():
     processed_files = get_processed_files(scores_file)
     logger.debug("%d processed files: " % len(processed_files))
     df = pd.read_csv(meta_file_dir)
+    df = df[df.columnid.notnull()]
+    logger.debug("shape: "+str(df.shape))
     # print(df.columns.values)
+    tottt = 0
     for idx, row in df.iterrows():
-        if row['columnid'] == '' or pd.isna(row['columnid']):# is np.nan:
-            continue
+        tottt += 1
+        logger.debug("tottt: " + str(tottt))
+        # if row['columnid'] == '' or pd.isna(row['columnid']):# is np.nan:
+        #     continue
         if row['filename'] in processed_files:
             continue
         class_uri = "http://dbpedia.org/ontology/"+row['concept']
         if row['kind'] == commons.ORDINAL:
             kind = row['kind']
+        elif row['kind'] == commons.YEAR:  # will ignore the year for now
+            continue
         else:
             kind = row['sub_kind']
         # print("<"+str(row['columnid'])+">  "+str(type(row['columnid'])))
@@ -98,7 +105,7 @@ def label_experiment():
         for pred in predictions:
             # for pair in pred:
             for idx, pair in enumerate(pred):
-                append_score(scores_file, "\t".join([row['filename']+".csv", str(idx+1), str(pair[0]), str(pair[1])]))
+                append_score(scores_file, "\t".join([row['filename']+".csv", str(idx+1), str(pair[0]), str(pair[1]), str(row['columnid'])]))
 
 
 def print_help():

@@ -5,6 +5,7 @@ from commons import KINDS, YEAR
 from collections import Counter
 from pprint import PrettyPrinter
 
+
 def compute_stats():
     meta_file_dir = os.path.join(meta_dir, 'T2Dv2_typology.csv')
     df = pd.read_csv(meta_file_dir)
