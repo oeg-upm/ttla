@@ -94,9 +94,13 @@ def label_experiment():
         if row['kind'] == commons.ORDINAL:
             kind = row['kind']
         elif row['kind'] == commons.YEAR:  # will ignore the year for now
+            logger.debug("ignore year")
             continue
+        elif row['sub_kind'] == commons.RANDOM:
+            kind = commons.OTHER
         else:
             kind = row['sub_kind']
+        logger.debug("not year: "+str(kind))
         # print("<"+str(row['columnid'])+">  "+str(type(row['columnid'])))
         logger.debug("get column from file: "+row['filename'])
         col = get_column(row['filename'], int(row['columnid']))
@@ -106,6 +110,26 @@ def label_experiment():
             # for pair in pred:
             for idx, pair in enumerate(pred):
                 append_score(scores_file, "\t".join([row['filename']+".csv", str(idx+1), str(pair[0]), str(pair[1]), str(row['columnid'])]))
+
+
+def add_kind_to_results():
+    """
+    This is to add types from the meta to the results file
+    :return:
+    """
+    results_fdir = os.path.join(proj_path, 'experiments', 'web_commons_v2_scores_results.tsv')
+    results_with_kinds_fdir = os.path.join(proj_path, 'experiments', 'web_commons_v2_results.tsv')
+    df_results = pd.read_csv(results_fdir, sep='\t')
+    df_meta = pd.read_csv(meta_file_dir)
+    for index, row in df_results.iterrows():
+        df_meta_row = df_meta[df_meta.filename==row['fname'][:-4]][ df_meta.columnid == row['column_id']]
+        kind = list(df_meta_row['kind'])[0]
+        sub_kind = list(df_meta_row['sub_kind'])[0]
+        df_results.loc[index,'kind'] = kind
+        df_results.loc[index,'sub_kind'] = sub_kind
+
+    print df_results
+    df_results.to_csv(results_with_kinds_fdir, sep="\t")
 
 
 def print_help():
@@ -125,6 +149,8 @@ if __name__ == "__main__":
             pass
         elif sys.argv[1] == "label":
             label_experiment()
+        elif sys.argv[1] == "addkinds":
+            add_kind_to_results()
         else:
             print_help()
     else:
