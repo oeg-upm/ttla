@@ -17,10 +17,31 @@ details will be mentioned here once we start.
 5. install dependencies: `pip install -r requirements.txt`
 
 
-# Run
+<!-- 
+# Run the web
 1.  access the virtualenv: `source .venv/bin/activate`
 2.  run the web app: `python app.py`
 3.  visit `http://127.0.0.1:5000` in your local browser
+-->
+
+# Run the experiments
+## Detection
+
+## Labeling
+1. Label (may take up to an hour, it needs to be connected to the internet)
+```
+python experiments/web_commons_v2.py label
+```
+2. Get the kinds (offline, quick)
+```
+python experiments/web_commons_v2.py addkinds
+ 
+```
+3. Show scores (offline, quick)
+```
+python experiments/web_commons_v2.py scores
+ 
+```
 
 
 # Tests
