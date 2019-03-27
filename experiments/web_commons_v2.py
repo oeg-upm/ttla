@@ -3,6 +3,7 @@ import os
 import sys
 import pandas as pd
 import numpy as np
+from pprint import PrettyPrinter
 from commons import meta_dir, data_dir, proj_path
 from label import classification
 import logging
@@ -132,6 +133,72 @@ def add_kind_to_results():
     df_results.to_csv(results_with_kinds_fdir, sep="\t")
 
 
+def compute_score_from_df(kind, df, is_sub, k):
+    """
+    :param kind:
+    :param df:
+    :return:
+    """
+    if is_sub is None:
+        df_kind = df
+    elif is_sub:
+        if kind == commons.OTHER:
+            df_kind = df[df.sub_kind.isin([commons.OTHER,commons.RANDOM])]
+        elif kind == commons.RANDOM:
+            return {}
+        else:
+            df_kind = df[df.sub_kind == kind]
+    else:
+        df_kind = df[df.kind == kind]
+
+    df_k = df_kind[df_kind.k <= k]
+    df_rec = df_kind[df_kind.k != 0]
+    if df_kind.shape[0] == 0:
+        prec = "N/A"
+        rec = "N/A"
+        f1 = "N/A"
+    else:
+        prec = df_k.shape[0]*1.0/df_kind.shape[0]
+        rec = df_rec.shape[0]*1.0/df_kind.shape[0]
+        f1 = 2 * prec * rec / (prec+rec)
+        prec = str(round(prec, 3))
+        rec = str(round(rec, 3))
+        f1 = str(round(f1, 3))
+    d = {
+        "precision": prec,
+        "recall": rec,
+        "f1": f1,
+    }
+    return d
+    # return prec
+
+
+def show_scores_from_results():
+    results_with_kinds_fdir = os.path.join(proj_path, 'experiments', 'web_commons_v2_results.tsv')
+    df = pd.read_csv(results_with_kinds_fdir, sep='\t')
+    scores = {
+        1: {},
+        3: {},
+        5: {},
+        10: {}
+    }
+    for k in scores.keys():
+        for kind in commons.KINDS:
+            if commons.KINDS[kind] == []:
+                scores[k][kind] = compute_score_from_df(kind=kind, df=df, is_sub=False, k=k)
+            else:
+                for sub in commons.KINDS[kind]:
+                    scores[k][sub] = compute_score_from_df(kind=sub, df=df, is_sub=True, k=k)
+            scores[k]["all"] = compute_score_from_df(kind="all", df=df, is_sub=None, k=k)
+        del scores[k][commons.RANDOM]
+        del scores[k][commons.YEAR]
+
+    pp = PrettyPrinter(indent=2)
+    pp.pprint(scores)
+    #
+    # print scores
+
+
 def print_help():
     help_msg = """
     TASK:
@@ -151,6 +218,8 @@ if __name__ == "__main__":
             label_experiment()
         elif sys.argv[1] == "addkinds":
             add_kind_to_results()
+        elif sys.argv[1] == "scores":
+            show_scores_from_results()
         else:
             print_help()
     else:
