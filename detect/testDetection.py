@@ -154,6 +154,7 @@ def type_evaluation():
     [X]invalud: Y incorrectly detect as X
     :return:
     """
+    results = {}
     numerical_types = []
     for kind in KINDS:
         if KINDS[kind] == []:
@@ -217,9 +218,15 @@ def type_evaluation():
             recall = 0.0
             recall_str = str(recall)
             f1_str = "N/A"
-
+        results[key] = {
+            "precision": precision_str,
+            "recall": recall_str,
+            "f1": f1_str
+        }
         # print("%15s : %3d out of %3d : %.3f" % (key, success, tot, precision))
         print("%15s : %3d out of (%3d,%3d) : precision %5s,  recall %5s  F1: %5s" % (key, success, tot, tot2, precision_str, recall_str, f1_str))
+    print results
+    return results
 
 
     # # verify

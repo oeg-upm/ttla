@@ -3,6 +3,7 @@ from app import app
 import unittest
 import os
 from detect.Detection import Detection
+from detect import testDetection
 from commons import CATEGORICAL, ORDINAL, SEQUENTIAL, HIERARCHICAL, COUNTS, OTHER
 
 
@@ -81,3 +82,15 @@ class DetectionTests(unittest.TestCase):
     def test_other(self):
         detect = Detection([28, 456, 2, 18, 200])
         self.assertEqual(detect.type, OTHER)
+
+    def test_detection_score(self):
+        results = testDetection.type_evaluation()
+        correct_results = {'ordinal': {'recall': '1.0', 'precision': '0.8', 'f1': '0.889'},
+                           'count': {'recall': '0.809', 'precision': '0.792', 'f1': '0.8'},
+                           'categorical': {'recall': '0.0', 'precision': '-', 'f1': '-'},
+                           'random': {'recall': '-', 'precision': '-', 'f1': '-'},
+                           'sequential': {'recall': '0.0', 'precision': '0.0', 'f1': 'N/A'},
+                           'year': {'recall': '1.0', 'precision': '0.8', 'f1': '0.889'},
+                           'hierarchical': {'recall': '-', 'precision': '-', 'f1': '-'},
+                           'other': {'recall': '0.516', 'precision': '0.552', 'f1': '0.533'}}
+        self.assertDictEqual(results, correct_results)
