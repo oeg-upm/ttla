@@ -135,18 +135,25 @@ def overall_evaluation():
 #         success = value['success']
 #         tot = value['failure']+value['success']
 #         if success > 0:
-#             perc = success*1.0/tot
-#             perc_str = str(round(perc, 3))
+#             prec = success*1.0/tot
+#             perc_str = str(round(prec, 3))
 #         elif tot == 0:
 #             perc_str = "-"
 #         else:
-#             perc = 0.0
-#             perc_str = str(perc)
-#         # print("%15s : %3d out of %3d : %.3f" % (key, success, tot, perc))
+#             prec = 0.0
+#             perc_str = str(prec)
+#         # print("%15s : %3d out of %3d : %.3f" % (key, success, tot, prec))
 #         print("%15s : %3d out of %3d : %s" % (key, success, tot, perc_str))
 
 
 def type_evaluation():
+    """
+    evaluate the detection
+    [X]success: X correctly detected as X
+    [X]failure: X incorrectly detect as Y
+    [X]invalud: Y incorrectly detect as X
+    :return:
+    """
     numerical_types = []
     for kind in KINDS:
         if KINDS[kind] == []:
@@ -158,7 +165,7 @@ def type_evaluation():
     count_types = {}
 
     for nt in numerical_types:
-        count_types[nt] = {'success': 0, 'failure': 0}
+        count_types[nt] = {'success': 0, 'failure': 0, 'invalid': 0}
 
     meta_file_dir = os.path.join(meta_dir, 'T2Dv2_typology.csv')
     df = pd.read_csv(meta_file_dir)
@@ -174,38 +181,57 @@ def type_evaluation():
         if detected_type == row['kind'] or detected_type == row['sub_kind']:
             count_types[detected_type]['success'] += 1
         else:
-            if row['sub_kind'] == "count":
-                print row['filename'] + " - " + str(int(row['columnid']))
+            # if row['sub_kind'] == "count":
+            #     print row['filename'] + " - " + str(int(row['columnid']))
 
             if row['kind'] in count_types:
                 count_types[row['kind']]['failure'] += 1
+                count_types[detected_type]['invalid'] += 1
+
             else:
                 count_types[row['sub_kind']]['failure'] += 1
-
+                count_types[detected_type]['invalid'] += 1
 
     for key, value in count_types.items():
         # print(key + ": " + str(value['success']) + " correct out of " + str(value['failure']+value['success']))
         success = value['success']
         tot = value['failure'] + value['success']
+        tot2 = value['invalid'] + value['success']
         if success > 0:
-            perc = success * 1.0 / tot
-            perc_str = str(round(perc, 3))
-        elif tot == 0:
-            perc_str = "-"
+            precision = success * 1.0 / tot
+            precision_str = str(round(precision, 3))
+            recall = success * 1.0 / tot2
+            recall_str = str(round(recall, 3))
+            f1 = 2 * precision * recall / (precision + recall)
+            f1_str = str(round(f1, 3))
+        elif tot == 0 or tot2 == 0:
+            if tot == 0:
+                precision_str = "-"
+                f1_str = "-"
+            if tot2 == 0:
+                recall_str = "-"
+                f1_str = "-"
         else:
-            perc = 0.0
-            perc_str = str(perc)
-        # print("%15s : %3d out of %3d : %.3f" % (key, success, tot, perc))
-        print("%15s : %3d out of %3d : %s" % (key, success, tot, perc_str))
+            precision = 0.0
+            precision_str = str(precision)
+            recall = 0.0
+            recall_str = str(recall)
+            f1_str = "N/A"
+
+        # print("%15s : %3d out of %3d : %.3f" % (key, success, tot, precision))
+        print("%15s : %3d out of (%3d,%3d) : precision %5s,  recall %5s  F1: %5s" % (key, success, tot, tot2, precision_str, recall_str, f1_str))
 
 
-    # verify
-    tot_correct = 0
-    tot_fail = 0
-    for key, value in count_types.items():
-        tot_correct += value['success']
-        tot_fail += value['failure']
-    print ("total correct: %d\n total wrong: %d\n summed: %d\n total: %d" % (tot_correct, tot_fail, tot_correct+tot_fail, tot_cols))
+    # # verify
+    # tot_correct = 0
+    # tot_fail = 0
+    # tot_invalid = 0
+    # for key, value in count_types.items():
+    #     tot_correct += value['success']
+    #     tot_fail += value['failure']
+    #     tot_invalid += value['invalid']
+    # print ("total correct: %d\n total fail: %d\n correct_fail: %d\n total: %d" % (tot_correct, tot_fail, tot_correct+tot_fail, tot_cols))
+
 
 if __name__ == "__main__":
     type_evaluation()
