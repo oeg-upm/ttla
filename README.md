@@ -2,6 +2,8 @@
 [![Build Status](https://semaphoreci.com/api/v1/ahmad88me/bob/branches/master/badge.svg)](https://semaphoreci.com/ahmad88me/bob)
 [![codecov](https://codecov.io/gh/oeg-upm/bob/branch/master/graph/badge.svg)](https://codecov.io/gh/oeg-upm/bob)
 [![status](https://img.shields.io/badge/status-under%20development-ff69b4.svg)](https://github.com/oeg-upm/bob)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2619307.svg)](https://doi.org/10.5281/zenodo.2619307)
+
 
 This application is meant to be an automated experiment and not
 an application by it self to annotated numeric columns. Nonetheless, 
