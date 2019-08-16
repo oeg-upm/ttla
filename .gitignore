@@ -1,5 +1,5 @@
 
-data/*
+data/*/*.csv
 
 # pycharm
 .idea/

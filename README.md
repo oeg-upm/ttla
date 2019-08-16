@@ -27,8 +27,15 @@ details will be mentioned here once we start.
 -->
 
 # Run the experiments
-## Detection
 
+## To download the data of T2Dv2 automatically
+```
+python data/preprocessing.py
+```
+## Detection
+```
+python experiments/web_commons_v2.py detect
+```
 ## Labeling
 1. Label (may take up to an hour, it needs to be connected to the internet)
 ```

@@ -25,8 +25,7 @@ if __name__ == '__main__':
         for kind in commons.KINDS:
             for sub in commons.KINDS[kind]:
                 commons.t2dv2_columns_of_kind(kind, sub)
-
-        print("T2Dv2 test is still under construction")
+        # print("T2Dv2 test is still under construction")
     elif test_name == 'olympic':
         print("Olympic Games test is under construction")
     else:

@@ -6,6 +6,7 @@ import numpy as np
 from pprint import PrettyPrinter
 from commons import meta_dir, data_dir, proj_path
 from label import classification
+from detect.testDetection import type_evaluation
 import logging
 from commons.logger import set_config
 logger = set_config(logging.getLogger(__name__))
@@ -213,7 +214,7 @@ def print_help():
 if __name__ == "__main__":
     if len(sys.argv) == 2:
         if sys.argv[1] == "detect":
-            pass
+            type_evaluation()
         elif sys.argv[1] == "label":
             label_experiment()
         elif sys.argv[1] == "addkinds":
