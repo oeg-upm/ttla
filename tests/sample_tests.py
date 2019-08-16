@@ -36,5 +36,5 @@ class SampleTest(unittest.TestCase):
         # assert the status code of the response
         self.assertEqual(result.status_code, 200)
 
-    def test_false(self):
-        self.assertTrue(False)
+    # def test_false(self):
+    #     self.assertTrue(False)
