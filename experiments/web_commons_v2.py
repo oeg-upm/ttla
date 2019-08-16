@@ -196,6 +196,7 @@ def show_scores_from_results():
 
     pp = PrettyPrinter(indent=2)
     pp.pprint(scores)
+    return scores
     #
     # print scores
 
@@ -205,6 +206,9 @@ def print_help():
     TASK:
         detect
         label
+        addkinds
+        scores
+        
     python web_commons_v2.py TASK
 
     """

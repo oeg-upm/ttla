@@ -54,20 +54,26 @@ python experiments/web_commons_v2.py scores
 
 
 # Tests
+## Quick tests (test the algorithms, but does not include the t2d experiment)
 ```
-python tests/test.py
+sh run_tests.sh
+```
+## run tests with the T2Dv2 experiment (may take up to an hour)
+```
+sh run_t2dv2_tests.sh
 ```
 *not that some tests may fail overtime as they depend on dbpedia*
+
 # Coverage: 
+## Coverage of the quick tests
 ```
-coverage run --source=. --omit=.venv/*  tests/test.py
-coverage report
+sh run_cov.sh
+```
+## Coverage of T2Dv2 tests
+```
+sh run_t2dv2_cov.sh
 ```
 
-# DATA
-## T2Dv2
-
-* [csv files](https://github.com/ahmad88me/TADA-NumCol/tree/master/web_commons/data)
 
 # Contribution 
 To contribute, please read the below to follow the same convention
