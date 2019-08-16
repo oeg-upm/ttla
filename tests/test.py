@@ -18,6 +18,12 @@ sample_cases = unittest.TestLoader().loadTestsFromTestCase(SampleTest)
 detect_cases = unittest.TestLoader().loadTestsFromTestCase(DetectionTests)
 labeling_cases = unittest.TestLoader().loadTestsFromTestCase(LabelingTests)
 commons_cases = unittest.TestLoader().loadTestsFromTestCase(EasySPARQLTests)
-suite = unittest.TestSuite([sample_cases, detect_cases, labeling_cases, commons_cases])
+cases = [
+    sample_cases,
+    detect_cases,
+    labeling_cases,
+    commons_cases
+]
+suite = unittest.TestSuite(cases)
 result = unittest.TextTestRunner().run(suite)
 sys.exit(not result.wasSuccessful())
