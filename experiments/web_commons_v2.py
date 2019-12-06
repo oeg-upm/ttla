@@ -127,8 +127,8 @@ def add_kind_to_results():
         df_meta_row = df_meta[df_meta.filename==row['fname'][:-4]][ df_meta.columnid == row['column_id']]
         kind = list(df_meta_row['kind'])[0]
         sub_kind = list(df_meta_row['sub_kind'])[0]
-        df_results.loc[index,'kind'] = kind
-        df_results.loc[index,'sub_kind'] = sub_kind
+        df_results.loc[index, 'kind'] = kind
+        df_results.loc[index, 'sub_kind'] = sub_kind
 
     print df_results
     df_results.to_csv(results_with_kinds_fdir, sep="\t")
