@@ -152,15 +152,22 @@ def compute_score_from_df(kind, df, is_sub, k):
     else:
         df_kind = df[df.kind == kind]
 
-    df_k = df_kind[df_kind.k <= k]
-    df_rec = df_kind[df_kind.k != 0]
+    df_found = df_kind[df_kind.k > 0]
+    df_correct = df_found[df_found.k <= k]
+    df_notfound = df_kind[df_kind.k == 0]
+
+    #
+    # df_k = df_kind[df_kind.k <= k]
+    # df_rec = df_kind[df_kind.k != 0]
     if df_kind.shape[0] == 0:
         prec = "N/A"
         rec = "N/A"
         f1 = "N/A"
     else:
-        prec = df_k.shape[0]*1.0/df_kind.shape[0]
-        rec = df_rec.shape[0]*1.0/df_kind.shape[0]
+        prec = df_correct.shape[0] * 1.0 / (df_found.shape[0] * 1.0)
+        # prec = df_k.shape[0]*1.0/df_kind.shape[0]
+        rec = df_correct.shape[0] * 1.0 / (df_notfound.shape[0] + df_correct.shape[0] * 1.0)
+        # rec = df_rec.shape[0]*1.0/df_kind.shape[0]
         f1 = 2 * prec * rec / (prec+rec)
         prec = str(round(prec, 3))
         rec = str(round(rec, 3))
