@@ -4,7 +4,7 @@ import unittest
 import os
 import pandas as pd
 import commons
-import label
+
 
 DATA_HOME = os.path.join(os.path.abspath("tests"), 'data')
 
@@ -87,3 +87,4 @@ class LabelingTests(unittest.TestCase):
     #     model_construction.build_model(class_uri, multi_threading=True)
     #     end = time.time()
     #     print("time for the multi threading: %s" % str(end-start))
+

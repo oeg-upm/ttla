@@ -12,6 +12,7 @@ from detection_tests import DetectionTests
 from labeling_tests import LabelingTests
 from commons_tests import EasySPARQLTests
 from t2dv2_tests import T2Dv2Tests
+from scores_tests import ScoresTests
 import unittest
 
 if __name__ == "__main__":
@@ -19,7 +20,10 @@ if __name__ == "__main__":
     detect_cases = unittest.TestLoader().loadTestsFromTestCase(DetectionTests)
     labeling_cases = unittest.TestLoader().loadTestsFromTestCase(LabelingTests)
     commons_cases = unittest.TestLoader().loadTestsFromTestCase(EasySPARQLTests)
+    scores_cases = unittest.TestLoader().loadTestsFromTestCase(ScoresTests)
+
     cases = [
+        scores_cases,
         sample_cases,
         detect_cases,
         labeling_cases,
