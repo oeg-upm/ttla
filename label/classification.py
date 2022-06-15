@@ -1,14 +1,14 @@
-from loader import *
+from label.loader import *
 import os
 from operator import itemgetter
 from fuzzycmeans import FCM
 from detect.Detection import Detection
-import model_construction
+from label import model_construction
 import pandas as pd
 import numpy as np
 import commons
 import logging
-import features
+from label import features
 from commons.logger import set_config
 logger = set_config(logging.getLogger(__name__))
 np.set_printoptions(suppress=True)
@@ -53,7 +53,8 @@ def classify(kind, class_uri, columns):
         logger.debug("predict the cluster for the given column")
         pred = fcm.predict(data_array)
         pred_with_names = zip(pred[0], centroid_names)
-        pred_with_names.sort(key=itemgetter(0), reverse=True)
+        pred_with_names = sorted(pred_with_names, key=lambda x: x[0], reverse=True)
+        # pred_with_names.sort(key=itemgetter(0), reverse=True)
         #logger.debug(str(pred_with_names))
         predictions.append(pred_with_names[:TOP_K])
     return predictions

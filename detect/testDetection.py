@@ -1,11 +1,10 @@
-from loader import *
+from detect.loader import *
 import os
 import pandas as pd
 import math
 from commons import get_num,  KINDS, get_column_from_meta
 
-from Detection import get_num_kind, get_kind_and_nums
-from Detection import Detection
+from detect.Detection import get_num_kind, get_kind_and_nums, Detection
 
 
 proj_path = (os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
@@ -225,7 +224,7 @@ def type_evaluation():
         }
         # print("%15s : %3d out of %3d : %.3f" % (key, success, tot, precision))
         print("%15s : %3d out of (%3d,%3d) : precision %5s,  recall %5s  F1: %5s" % (key, success, tot, tot2, precision_str, recall_str, f1_str))
-    print results
+    print(results)
     return results
 
 

@@ -1,4 +1,4 @@
-from loader import *
+from detect.loader import *
 from collections import Counter
 import math
 from commons import CATEGORICAL, ORDINAL, SEQUENTIAL, RATIO_INTERVAL, HIERARCHICAL, COUNTS, OTHER, YEAR

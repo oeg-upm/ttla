@@ -1,4 +1,4 @@
-from loader import *
+from experiments.loader import *
 import os
 import sys
 import pandas as pd
@@ -130,7 +130,7 @@ def add_kind_to_results():
         df_results.loc[index, 'kind'] = kind
         df_results.loc[index, 'sub_kind'] = sub_kind
 
-    print df_results
+    print(df_results)
     df_results.to_csv(results_with_kinds_fdir, sep="\t")
 
 

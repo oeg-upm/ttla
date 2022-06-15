@@ -1,5 +1,5 @@
-from loader import *
-from Detection import get_num_kind, get_kind_and_nums
+from .loader import *
+from .Detection import get_num_kind, get_kind_and_nums
 #__all__ = ['get_num_kind', 'get_kind_and_nums']
 
 # import pandas as pd

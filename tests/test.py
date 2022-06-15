@@ -15,6 +15,7 @@ from t2dv2_tests import T2Dv2Tests
 from scores_tests import ScoresTests
 import unittest
 
+
 if __name__ == "__main__":
     sample_cases = unittest.TestLoader().loadTestsFromTestCase(SampleTest)
     detect_cases = unittest.TestLoader().loadTestsFromTestCase(DetectionTests)
@@ -30,11 +31,11 @@ if __name__ == "__main__":
         commons_cases
     ]
 
-    if len(sys.argv) == 2:
-        if sys.argv[1] == "t2dv2":
-            t2dv2_cases = unittest.TestLoader().loadTestsFromTestCase(T2Dv2Tests)
-        else:
-            print("ERROR: wrong test parameter")
+    # if len(sys.argv) == 2:
+    #     if sys.argv[1] == "t2dv2":
+    #         t2dv2_cases = unittest.TestLoader().loadTestsFromTestCase(T2Dv2Tests)
+    #     else:
+    #         print("ERROR: wrong test parameter")
 
     suite = unittest.TestSuite(cases)
     result = unittest.TextTestRunner().run(suite)

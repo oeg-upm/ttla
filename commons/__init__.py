@@ -1,7 +1,7 @@
 import os
 import pandas as pd
-from easysparql import *
-
+#from .easysparql import *
+CACHE_DIR = ".cache"
 ENDPOINT = "https://dbpedia.org/sparql"
 MIN_NUM_OF_ENT_PER_PROP = 30  # the minimum number of entities per property (get_properties)
 QUERY_LIMIT = ""  # At the moment, we do not put any limit on the number of results
@@ -92,7 +92,7 @@ def get_num(num_or_str):
         return None
     elif isinstance(num_or_str, (int, float)):
         return num_or_str
-    elif isinstance(num_or_str, basestring):
+    elif isinstance(num_or_str, str):
         if '.' in num_or_str or ',' in num_or_str or num_or_str.isdigit():
             try:
                 return float(num_or_str.replace(',', ''))

@@ -1,11 +1,14 @@
-from loader import *
+from label.loader import *
 import commons
 import detect
-from features import compute_features
+from label.features import compute_features
 import os
 import sys
 from multiprocessing import Process, Pipe
 from PPool.Pool import Pool
+# from TPool.TPool import Pool
+# from threading import Lock
+from easysparql.easysparqlclass import EasySparql
 
 import logging
 from commons.logger import set_config
@@ -41,10 +44,12 @@ def features_and_kinds_func(class_uri, property_uri, pipe):
     :param property_uri:
     :return:
     """
-    values = commons.get_objects(endpoint=ENDPOINT, class_uri=class_uri, property_uri=property_uri)
+    easysparql = EasySparql(endpoint=commons.ENDPOINT, cache_dir=commons.CACHE_DIR)
+    values = easysparql.get_objects(class_uri=class_uri, property_uri=property_uri)
     logger.debug("got %d objects for property %s" % (len(values), property_uri))
     nums = commons.get_numerics_from_list(values)
     if nums and len(nums) > commons.MIN_NUM_NUMS:
+        print("\n\n*********\n\nKEEPING: %s" % property_uri)
         logger.debug("%d of them are nums of property %s" % (len(nums), property_uri))
         kind, new_nums = detect.get_kind_and_nums(nums)
         logger.debug("detect kind: %s for property %s" % (kind, property_uri))
@@ -59,7 +64,10 @@ def features_and_kinds_func(class_uri, property_uri, pipe):
             'features': features,
             'property_uri': property_uri,
         }
+        print("Sending to pipe: %s" % str(pair))
         pipe.send(pair)
+    else:
+        print("skipping: %s\n\n" % property_uri)
 
 
 def get_features_and_kinds_multi_thread(class_uri):
@@ -67,8 +75,11 @@ def get_features_and_kinds_multi_thread(class_uri):
     :param class_uri:
     :return:
     """
-    logger.debug("ask for properties")
-    properties = commons.get_properties(class_uri=class_uri, endpoint=ENDPOINT)
+    logger.debug("ask for properties for %s" % class_uri)
+    easysparql = EasySparql(endpoint=commons.ENDPOINT, cache_dir=commons.CACHE_DIR)
+    properties = easysparql.get_class_properties(class_uri=class_uri, min_num=commons.MIN_NUM_NUMS)
+    print("get_features_and_kinds_multi_thread> properties: ")
+    print(properties)
     logger.debug("properties: "+str(len(properties)))
     features_send_pipe, features_recieve_pipe = Pipe()
     gatherer_send_pipe, gatherer_reciever_pipe = features_send_pipe, features_recieve_pipe
@@ -83,7 +94,7 @@ def get_features_and_kinds_multi_thread(class_uri):
     pool.run()
     logger.debug("finished the pool")
     features_send_pipe.send(None)
-    logger.debug("recieving the pairs from the gatherer")
+    logger.debug("receiving the pairs from the gatherer")
     fk_pairs = []
     fk_pair = features_recieve_pipe.recv()
     while fk_pair is not None:
@@ -167,14 +178,18 @@ def build_model(class_uri):
 
     features_and_kinds = get_features_and_kinds_multi_thread(class_uri=class_uri)
 
+    print("features and kinds: ")
+    print(features_and_kinds)
+
     model_txt = ""
     logger.debug("num of features and kinds: %d" % (len(features_and_kinds)))
     for fk in features_and_kinds:
         features_txt = ",".join([str(f) for f in fk['features']])
         line = "%s\t%s\t%s\n" % (fk['property_uri'], fk['kind'], features_txt)
-        model_txt+=line
+        model_txt += line
     f = open(model_fdir, 'w')
-    f.write(model_txt.encode('utf-8'))
+    # f.write(model_txt.encode('utf-8'))
+    f.write(model_txt)
     f.close()
     return model_fdir
 

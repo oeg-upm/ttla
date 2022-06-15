@@ -1,5 +1,6 @@
 import logging
-from __init__ import log_dir
+from commons.__init__ import log_dir
+# from __init__ import log_dir
 import os
 
 
