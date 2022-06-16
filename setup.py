@@ -14,7 +14,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="ttla",
-    version="1.0.2",
+    version="1.0.3",
     author="Ahmad Alobaid, Emilia Kacprzak",
     author_email="aalobaid@fi.upm.es",
     description="Typology-based semantic labelling of numeric columns",

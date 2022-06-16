@@ -10,13 +10,22 @@ an application by it self to annotated numeric columns. Nonetheless,
 we are planning to create an application based on this approach
 details will be mentioned here once we start.
 
+# Install via pip
+```
+pip install ttla
+```
 
-# Prerequisits (one time)
-1. [pip](https://pip.pypa.io/en/stable/installing/) 
-2. [virtualenv](https://virtualenv.pypa.io/en/latest/)
-3. create virtualenv: `virtualenv -p /usr/bin/python2.7 .venv`
-4. access the virtualenv: `source .venv/bin/activate`
-5. install dependencies: `pip install -r requirements.txt`
+[//]: # (# Prerequisits &#40;one time&#41;)
+
+[//]: # (1. [pip]&#40;https://pip.pypa.io/en/stable/installing/&#41; )
+
+[//]: # (2. [virtualenv]&#40;https://virtualenv.pypa.io/en/latest/&#41;)
+
+[//]: # (3. create virtualenv: `virtualenv -p /usr/bin/python2.7 .venv`)
+
+[//]: # (4. access the virtualenv: `source .venv/bin/activate`)
+
+[//]: # (5. install dependencies: `pip install -r requirements.txt`)
 
 
 <!-- 
