@@ -10,7 +10,7 @@ blocks:
       jobs:
         - name: quick test
           commands:
-            - sem-version python 3.7
+            - sem-version python 3.8
             - checkout
             - python -m pip install --upgrade pip
             - pip install -r requirements.txt
@@ -23,5 +23,3 @@ blocks:
           commands:
             - sh run_t2dv2_cov.sh
             - 'bash <(curl -s https://codecov.io/bash)'
-      secrets:
-        - name: ttla
