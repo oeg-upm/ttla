@@ -1,0 +1,27 @@
+version: v1.0
+name: Python
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu2004
+blocks:
+  - name: Quick test
+    task:
+      jobs:
+        - name: quick test
+          commands:
+            - sem-version python 3.8
+            - checkout
+            - python -m pip install --upgrade pip
+            - pip install cython
+            - 'pip install --only-binary :all: pandas==1.4.2'
+            - pip install -r requirements.txt
+            - pip install coverage wheel
+            - sh run_tests.sh
+  - name: Run with T2Dv2 tests
+    task:
+      jobs:
+        - name: Test T2Dv2 with Coverage
+          commands:
+            - sh run_t2dv2_cov.sh
+            - 'bash <(curl -s https://codecov.io/bash)'
