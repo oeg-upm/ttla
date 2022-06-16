@@ -23,5 +23,12 @@ blocks:
       jobs:
         - name: Test T2Dv2 with Coverage
           commands:
+            - sem-version python 3.8
+            - checkout
+            - python -m pip install --upgrade pip
+            - pip install cython
+            - 'pip install --only-binary :all: pandas==1.4.2'
+            - pip install wheel
+            - pip install -r requirements.txt
             - sh run_t2dv2_cov.sh
             - 'bash <(curl -s https://codecov.io/bash)'
