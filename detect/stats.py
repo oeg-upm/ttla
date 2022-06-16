@@ -17,15 +17,13 @@ def compute_stats():
     #     dfkind = df[df.kind == num_kind and df.sub_kind == sub_kind]
     # print(dfkind)
     # return dfkind
-    print dfkind.shape
+    print(dfkind.shape)
     ckind = Counter(dfkind['kind'])
     csub = Counter(dfkind['sub_kind'])
-    print ckind
-    print csub
+    print(ckind)
+    print(csub)
     tot = dfkind.shape[0]
-    stats = {
-
-    }
+    stats = dict()
     for kind in KINDS.keys():
         d = {
             'num': ckind[kind],

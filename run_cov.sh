@@ -1,2 +1,2 @@
-coverage run --source=. --omit=.venv/*  tests/test.py
-coverage report
+coverage run -m tests.test
+coverage report -m --include="commons/*;detect/*;label/*;experiments/*"

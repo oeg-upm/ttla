@@ -74,6 +74,11 @@ sh run_cov.sh
 sh run_t2dv2_cov.sh
 ```
 
+# To publish
+```
+python setup.py sdist bdist_wheel
+twine upload dist/*
+```
 
 # Contribution 
 To contribute, please read the below to follow the same convention
