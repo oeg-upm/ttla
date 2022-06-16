@@ -15,8 +15,8 @@ blocks:
             - python -m pip install --upgrade pip
             - pip install cython
             - 'pip install --only-binary :all: pandas==1.4.2'
+            - pip install wheel
             - pip install -r requirements.txt
-            - pip install coverage wheel
             - sh run_tests.sh
   - name: Run with T2Dv2 tests
     task:
