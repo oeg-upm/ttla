@@ -14,14 +14,14 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="ttla",
-    version="1.0.1",
+    version="1.0.2",
     author="Ahmad Alobaid, Emilia Kacprzak",
     author_email="aalobaid@fi.upm.es",
     description="Typology-based semantic labelling of numeric columns",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/oeg-upm/ttla",
-    packages=setuptools.find_packages(),
+    packages=["detect", "label", "commons"],
     install_requires=[
         'easysparql', 'Flask', 'requests', 'rdflib', 'PPool', 'pandas', 'fuzzycmeans', 'coverage', 'chardet'
     ],

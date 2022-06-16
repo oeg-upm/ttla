@@ -1,6 +1,6 @@
 # TTLA
 
-[![Build Status](https://semaphoreci.com/api/v1/ahmad88me/ttla/branches/master/badge.svg)](https://semaphoreci.com/ahmad88me/ttla)
+[![Build Status](https://ahmad88me.semaphoreci.com/badges/ttla/branches/master.svg?key=7b050606-3d80-4698-a022-a3d6d1464203)](https://ahmad88me.semaphoreci.com/projects/ttla)
 [![codecov](https://codecov.io/gh/oeg-upm/ttla/branch/master/graph/badge.svg)](https://codecov.io/gh/oeg-upm/ttla)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2619306.svg)](https://doi.org/10.5281/zenodo.2619306)
 
