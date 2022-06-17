@@ -5,7 +5,7 @@ agent:
     type: e1-standard-2
     os_image: ubuntu2004
 blocks:
-  - name: Quick test
+  - name: Quick Test
     task:
       jobs:
         - name: quick test
@@ -18,10 +18,10 @@ blocks:
             - pip install wheel
             - pip install -r requirements.txt
             - sh run_tests.sh
-  - name: Run with T2Dv2 tests
+  - name: Quick Coverage
     task:
       jobs:
-        - name: Test T2Dv2 with Coverage
+        - name: quick coverage
           commands:
             - sem-version python 3.8
             - checkout
@@ -30,5 +30,5 @@ blocks:
             - 'pip install --only-binary :all: pandas==1.4.2'
             - pip install wheel
             - pip install -r requirements.txt
-            - sh run_t2dv2_cov.sh
+            - sh run_cov.sh
             - 'bash <(curl -s https://codecov.io/bash)'
