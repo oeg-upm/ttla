@@ -13,24 +13,31 @@ from dateutil import parser
 
 class Detection(object):
 
-    def __init__(self, values):
+    def __init__(self, values=[]):
+        if values:
+            self.values = values
+            self.cleanValues = self.preprocessing()
+            self.conditions = self.check_conditions()
+            self.type = self.getType()
+
+    def detect(self, values):
         self.values = values
         self.cleanValues = self.preprocessing()
         self.conditions = self.check_conditions()
         self.type = self.getType()
+        return self.type
 
-    """ check if values nonnegative and real"""
     def check_conditions(self):
+        """ check if values non-negative and real"""
         num_vals = len(self.cleanValues)
         grace_percentage = 0.05
         num_neg_float = 0
         new_vals = []
         for k in self.cleanValues:
             if k < 0 or not self.is_int(k):
-                num_neg_float+=1
+                num_neg_float += 1
                 logger.debug("Breaks the rule of being nonnegative and real: %s, num of vals: %d" % (str(k), num_vals))
                 if num_neg_float*1.0/num_vals >= grace_percentage:
-                    # logger.debug("negfloat: %d, num_vals: %d, formula: %f" % (num_neg_float,num_vals,(num_neg_float*1.0/num_vals)))
                     return False
             else:
                 new_vals.append(k)

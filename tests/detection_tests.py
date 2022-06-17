@@ -6,7 +6,6 @@ from detect.Detection import Detection
 from detect import testDetection
 from commons import CATEGORICAL, ORDINAL, SEQUENTIAL, HIERARCHICAL, COUNTS, OTHER
 
-
 DATA_HOME = os.path.join(os.path.abspath("tests"), 'data')
 
 
@@ -44,22 +43,28 @@ class DetectionTests(unittest.TestCase):
         detect = Detection([1, 2, 3, 4, 5])  # ordinal
         self.assertEqual(detect.type, ORDINAL)
 
+    def test_detect_ordinal(self):
+        detect = Detection()  # ordinal
+        self.assertEqual(detect.detect([1, 2, 3, 4, 5]), ORDINAL)
+
     def test_categorical(self):
         # Otherwise, things like weight will be as a categorical
         # detect = Detection([1, 1, 3, 3, 3, 3, 3, 5])
         # self.assertEqual(detect.type, CATEGORICAL)
         detect = Detection([1, 1, 1, 1, 3, 3, 3, 3, 3, 5, 5, 5, 5])
         self.assertEqual(detect.type, CATEGORICAL)
-        img_size = [220, 200, 220,200,200,200,220,270,250,200,220,200,250, 200,200,250,200,220,200,220,
-                    220,250,220,200,220,250,200,200,200,100,200]
+        img_size = [220, 200, 220, 200, 200, 200, 220, 270, 250, 200, 220, 200, 250, 200, 200, 250, 200, 220, 200, 220,
+                    220, 250, 220, 200, 220, 250, 200, 200, 200, 100, 200]
         detect = Detection(img_size)
         self.assertEqual(detect.type, CATEGORICAL)
-        neg_cat = [220, 200, 220,200,200,200,220,-270,250,200,220,200,-250, 200,200,250,200,-220,200,-220,
-                    220,250,220,200,220,250,200,200,200,100,200]
+        neg_cat = [220, 200, 220, 200, 200, 200, 220, -270, 250, 200, 220, 200, -250, 200, 200, 250, 200, -220, 200,
+                   -220,
+                   220, 250, 220, 200, 220, 250, 200, 200, 200, 100, 200]
         detect = Detection(neg_cat)
         self.assertNotEqual(detect.type, CATEGORICAL)
-        float_cat = [220.0, 200.1, 220.1, 200.2,200.3,200.5,220,270,250,200,220,200,250, 200,200,250,-200,220,200,220,
-                    220,250,220,200,220,250,200,-200,200,100,-200]
+        float_cat = [220.0, 200.1, 220.1, 200.2, 200.3, 200.5, 220, 270, 250, 200, 220, 200, 250, 200, 200, 250, -200,
+                     220, 200, 220,
+                     220, 250, 220, 200, 220, 250, 200, -200, 200, 100, -200]
         detect = Detection(float_cat)
         self.assertNotEqual(detect.type, CATEGORICAL)
 
