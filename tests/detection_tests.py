@@ -1,10 +1,10 @@
-import detect
+import ttla.detect
 from app import app
 import unittest
 import os
-from detect.Detection import Detection
-from detect import testDetection
-from commons import CATEGORICAL, ORDINAL, SEQUENTIAL, HIERARCHICAL, COUNTS, OTHER
+from ttla.detect.Detection import Detection
+from ttla.detect import testDetection
+from ttla.commons import CATEGORICAL, ORDINAL, SEQUENTIAL, HIERARCHICAL, COUNTS, OTHER
 
 DATA_HOME = os.path.join(os.path.abspath("tests"), 'data')
 

@@ -1,9 +1,9 @@
-from label import SimilarityMeasures
+from ttla.label import SimilarityMeasures
 from app import app
 import unittest
 import os
 import pandas as pd
-import commons
+from ttla import commons
 
 
 DATA_HOME = os.path.join(os.path.abspath("tests"), 'data')

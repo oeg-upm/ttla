@@ -7,7 +7,7 @@ MIN_NUM_OF_ENT_PER_PROP = 30  # the minimum number of entities per property (get
 QUERY_LIMIT = ""  # At the moment, we do not put any limit on the number of results
 MIN_NUM_NUMS = 30  # The minimum number of values that will be annotated, this is to ignore small size
 
-proj_path = (os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
+proj_path = (os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, os.pardir))
 
 data_dir = os.path.join(proj_path, 'data')
 meta_dir = os.path.join(proj_path, 'meta')

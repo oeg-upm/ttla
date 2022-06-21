@@ -1,8 +1,8 @@
-from label import SimilarityMeasures
+from ttla import commons
+from ttla.label import SimilarityMeasures
 from app import app
 import unittest
 import os
-import commons
 from easysparql.easysparqlclass import EasySparql
 
 ENDPOINT = commons.ENDPOINT

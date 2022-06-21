@@ -4,11 +4,11 @@ import sys
 import pandas as pd
 import numpy as np
 from pprint import PrettyPrinter
-from commons import meta_dir, data_dir, proj_path
-from label import classification
-from detect.testDetection import type_evaluation
+from ttla.commons import meta_dir, data_dir, proj_path
+from ttla.label import classification
+from ttla.detect.testDetection import type_evaluation
 import logging
-from commons.logger import set_config
+from ttla.commons.logger import set_config
 logger = set_config(logging.getLogger(__name__))
 np.set_printoptions(suppress=True)
 
