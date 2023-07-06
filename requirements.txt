@@ -10,4 +10,4 @@ requests==2.22.0
 six==1.12.0
 unicodecsv==0.14.1
 easysparql==1.6.2
-scipy==1.8.1
+scipy==1.10.0
